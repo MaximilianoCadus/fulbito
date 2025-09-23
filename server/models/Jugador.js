@@ -6,8 +6,8 @@ const JugadorSchema = new mongoose.Schema({
   nroCelular: {
     type: String,
     required: true,
-    match: /^\+?[1-9]\d{1,14}$/,
-    maxlength: 15,
+    match: /^\+549\d{10}$/,
+    maxlength: 14,
   },
   reservas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reserva" }],
 });

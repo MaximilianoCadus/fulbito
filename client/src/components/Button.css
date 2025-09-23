@@ -1,0 +1,146 @@
+/* Button Component Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:focus-visible {
+  outline: 2px solid #1b9c3f;
+  outline-offset: 2px;
+}
+
+/* Button Sizes */
+.btn--small {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  min-height: 36px;
+}
+
+.btn--medium {
+  padding: 12px 24px;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+.btn--large {
+  padding: 16px 32px;
+  font-size: 1.125rem;
+  min-height: 56px;
+}
+
+/* Button Variants */
+.btn--primary {
+  background-color: #1b9c3f;
+  color: white;
+  box-shadow: 0 2px 8px rgba(27, 156, 63, 0.3);
+}
+
+.btn--primary:hover:not(.btn--disabled) {
+  background-color: #168a37;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 156, 63, 0.4);
+}
+
+.btn--primary:active:not(.btn--disabled) {
+  background-color: #147530;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(27, 156, 63, 0.3);
+}
+
+.btn--secondary {
+  background-color: #f8f9fa;
+  color: #1b9c3f;
+  border: 2px solid #1b9c3f;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn--secondary:hover:not(.btn--disabled) {
+  background-color: #1b9c3f;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(27, 156, 63, 0.3);
+}
+
+.btn--secondary:active:not(.btn--disabled) {
+  background-color: #168a37;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(27, 156, 63, 0.3);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: #1b9c3f;
+  border: 2px solid #1b9c3f;
+}
+
+.btn--outline:hover:not(.btn--disabled) {
+  background-color: rgba(27, 156, 63, 0.1);
+  transform: translateY(-1px);
+}
+
+.btn--outline:active:not(.btn--disabled) {
+  background-color: rgba(27, 156, 63, 0.2);
+  transform: translateY(0);
+}
+
+/* Disabled State */
+.btn--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e9ecef !important;
+  color: #6c757d !important;
+  border-color: #dee2e6 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Ripple Effect */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn:active::before:not(.btn--disabled) {
+  width: 300px;
+  height: 300px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .btn--large {
+    padding: 14px 28px;
+    font-size: 1rem;
+    min-height: 52px;
+  }
+
+  .btn--medium {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  .btn--small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-height: 32px;
+  }
+}

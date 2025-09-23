@@ -1,0 +1,301 @@
+/* RegisterPage Component Styles */
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fffe 0%, #e8f5e8 100%);
+  padding: 2rem 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.register-container {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header */
+.register-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.back-button:hover {
+  color: var(--color-primary);
+  background-color: rgba(27, 156, 63, 0.1);
+}
+
+.back-button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.register-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 2rem 0 1.5rem 0;
+}
+
+.register-logo-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(27, 156, 63, 0.3));
+}
+
+.register-logo-text {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #1b9c3f;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(27, 156, 63, 0.2);
+}
+
+.register-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.register-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Form */
+.register-form {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(27, 156, 63, 0.1);
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-section:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.form-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-error::before {
+  content: "⚠";
+  font-size: 1rem;
+}
+
+.form-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #166534;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-success::before {
+  content: "✓";
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Actions */
+.register-actions {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.register-submit {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.register-login-link {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.link-button:hover {
+  color: var(--color-primary-dark);
+}
+
+.link-button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .register-page {
+    padding: 1rem 0;
+  }
+
+  .register-container {
+    padding: 0 1rem;
+    max-width: 100%;
+  }
+
+  .register-header {
+    margin-bottom: 2rem;
+  }
+
+  .back-button {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .register-logo {
+    margin: 1rem 0;
+  }
+
+  .register-logo-icon {
+    font-size: 2rem;
+  }
+
+  .register-logo-text {
+    font-size: 2rem;
+  }
+
+  .register-title {
+    font-size: 1.75rem;
+  }
+
+  .register-subtitle {
+    font-size: 1rem;
+  }
+
+  .register-form {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-section-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 0 0.75rem;
+  }
+
+  .register-form {
+    padding: 1rem;
+  }
+
+  .register-logo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .register-logo-icon {
+    font-size: 1.75rem;
+  }
+
+  .register-logo-text {
+    font-size: 1.75rem;
+  }
+
+  .register-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .register-form {
+    border: 2px solid var(--color-primary);
+    box-shadow: none;
+  }
+
+  .form-section-title {
+    border-bottom-color: var(--color-primary);
+  }
+
+  .form-error {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .back-button,
+  .link-button {
+    transition: none;
+  }
+}

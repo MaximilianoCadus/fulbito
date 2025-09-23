@@ -1,0 +1,116 @@
+/* Locality Select Component - Exact FormField styling match */
+.locality-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.locality-select__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.locality-select__label .required {
+  color: #e53e3e;
+  font-weight: 700;
+}
+
+.locality-select__input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: var(--color-text);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.locality-select__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(27, 156, 63, 0.1);
+}
+
+.locality-select__input:hover:not(:focus):not(:disabled) {
+  border-color: #cbd5e0;
+}
+
+.locality-select__input:disabled {
+  background-color: #f7fafc;
+  color: #a0aec0;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.locality-select__input.error {
+  border-color: #e53e3e;
+  background-color: #fef5f5;
+}
+
+.locality-select__input.error:focus {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.locality-select__loading {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  background-color: #f7fafc;
+  text-align: center;
+}
+
+.locality-select__error {
+  font-size: 0.75rem;
+  color: #e53e3e;
+  font-weight: 500;
+  margin-top: -0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.locality-select__error::before {
+  content: "⚠";
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .locality-select__input,
+  .locality-select__loading {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .locality-select__label {
+    font-size: 0.8rem;
+  }
+
+  .locality-select__error {
+    font-size: 0.7rem;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .locality-select__input {
+    border-width: 3px;
+  }
+
+  .locality-select__input.error {
+    border-color: #c53030;
+  }
+}

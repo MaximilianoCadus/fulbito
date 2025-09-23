@@ -1,0 +1,196 @@
+/* Mobile Number Field Component - Exact FormField styling match */
+.mobile-number-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mobile-number-field__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.mobile-number-field__required {
+  color: #e53e3e;
+  font-weight: 700;
+}
+
+.mobile-number-field__input-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.mobile-number-field__input-wrapper:hover:not(:focus-within):not(
+    :has(.mobile-number-field__input:disabled)
+  ) {
+  border-color: #cbd5e0;
+}
+
+.mobile-number-field__input-wrapper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(27, 156, 63, 0.1);
+}
+
+.mobile-number-field__prefix {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  background-color: #f7fafc;
+  border-right: 1px solid #e2e8f0;
+  font-weight: 500;
+  color: var(--color-text);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.mobile-number-field__flag {
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+  /* Ensure proper emoji rendering */
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    sans-serif;
+  font-feature-settings: "liga" off;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fallback for systems that don't support flag emojis */
+.mobile-number-field__flag::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  height: 0.9rem;
+  background: linear-gradient(
+    to bottom,
+    #74acdf 33%,
+    #ffffff 33%,
+    #ffffff 66%,
+    #74acdf 66%
+  );
+  border-radius: 2px;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  /* Hide when emoji is supported */
+  font-size: 0;
+}
+
+/* Show emoji when supported, hide fallback */
+@supports (font-variation-settings: normal) {
+  .mobile-number-field__flag::before {
+    display: none;
+  }
+}
+
+.mobile-number-field__code {
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}
+
+.mobile-number-field__input {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: transparent;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.mobile-number-field__input::placeholder {
+  color: #a0aec0;
+  font-family: inherit;
+}
+
+.mobile-number-field__input:disabled {
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.mobile-number-field__input-wrapper:has(.mobile-number-field__input:disabled) {
+  background-color: #f7fafc;
+  border-color: #e2e8f0;
+}
+
+.mobile-number-field__input-wrapper:has(.mobile-number-field__input:disabled)
+  .mobile-number-field__prefix {
+  background-color: #edf2f7;
+  color: #a0aec0;
+}
+
+/* Error State */
+.mobile-number-field--error .mobile-number-field__input-wrapper {
+  border-color: #e53e3e;
+  background-color: #fef5f5;
+}
+
+.mobile-number-field--error .mobile-number-field__input-wrapper:focus-within {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.mobile-number-field--error .mobile-number-field__prefix {
+  background-color: #fed7d7;
+  border-right-color: #feb2b2;
+}
+
+.mobile-number-field__error {
+  font-size: 0.75rem;
+  color: #e53e3e;
+  font-weight: 500;
+  margin-top: -0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.mobile-number-field__error::before {
+  content: "⚠";
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mobile-number-field__input,
+  .mobile-number-field__prefix {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .mobile-number-field__label {
+    font-size: 0.8rem;
+  }
+
+  .mobile-number-field__error {
+    font-size: 0.7rem;
+  }
+
+  .mobile-number-field__flag {
+    font-size: 1rem;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .mobile-number-field__input-wrapper {
+    border-width: 3px;
+  }
+
+  .mobile-number-field--error .mobile-number-field__input-wrapper {
+    border-color: #c53030;
+  }
+}
