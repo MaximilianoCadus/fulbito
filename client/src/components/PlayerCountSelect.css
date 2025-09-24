@@ -1,0 +1,167 @@
+/* PlayerCountSelect Component Styles */
+.player-count-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.player-count-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required-indicator {
+  color: #e53e3e;
+  font-weight: 700;
+}
+
+.player-count-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.player-count-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: var(--color-text);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.player-count-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(27, 156, 63, 0.1);
+}
+
+.player-count-input:hover:not(:focus):not(:disabled) {
+  border-color: #cbd5e0;
+}
+
+.player-count-input:disabled {
+  background-color: #f7fafc;
+  color: #a0aec0;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+/* Error State */
+.player-count-select.has-error .player-count-input {
+  border-color: #e53e3e;
+  background-color: #fef5f5;
+}
+
+.player-count-select.has-error .player-count-input:focus {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.error-message {
+  font-size: 0.75rem;
+  color: #e53e3e;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.error-message::before {
+  content: "⚠";
+  font-size: 0.875rem;
+}
+
+/* Custom dropdown arrow */
+.player-count-input-container::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--color-text-secondary);
+  pointer-events: none;
+  transition: transform 0.2s ease, border-top-color 0.2s ease;
+  z-index: 1;
+}
+
+.player-count-input:focus ~ .player-count-input-container::after,
+.player-count-input:hover:not(:disabled)
+  ~ .player-count-input-container::after {
+  border-top-color: var(--color-primary);
+}
+
+.player-count-input:disabled ~ .player-count-input-container::after {
+  border-top-color: #a0aec0;
+}
+
+/* Options styling for supported browsers */
+.player-count-input option {
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: var(--color-text);
+  background-color: #ffffff;
+}
+
+.player-count-input option:hover {
+  background-color: rgba(27, 156, 63, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .player-count-input {
+    padding: 10px 14px;
+    padding-right: 44px;
+    font-size: 0.9rem;
+  }
+
+  .player-count-label {
+    font-size: 0.8rem;
+  }
+
+  .error-message {
+    font-size: 0.7rem;
+  }
+
+  .player-count-icon {
+    right: 14px;
+    font-size: 1.125rem;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .player-count-input {
+    border-width: 3px;
+  }
+
+  .player-count-select.has-error .player-count-input {
+    border-color: #c53030;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .player-count-input,
+  .player-count-icon,
+  .player-count-input-container::after {
+    transition: none;
+  }
+}

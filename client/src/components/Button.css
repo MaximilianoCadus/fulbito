@@ -94,6 +94,24 @@
   transform: translateY(0);
 }
 
+.btn--danger {
+  background-color: #dc2626;
+  color: white;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn--danger:hover:not(.btn--disabled) {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.btn--danger:active:not(.btn--disabled) {
+  background-color: #991b1b;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+}
+
 /* Disabled State */
 .btn--disabled {
   opacity: 0.6;

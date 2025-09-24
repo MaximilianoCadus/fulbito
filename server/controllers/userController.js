@@ -98,7 +98,7 @@ const getUserById = async (req, res) => {
       .populate("jugador")
       .populate("empresa")
       .populate("predio")
-      .select("-contraseña");
+      .select("_id email tipoUsuario jugador empresa predio __v");
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });

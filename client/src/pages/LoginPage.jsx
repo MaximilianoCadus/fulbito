@@ -9,9 +9,10 @@ import "./LoginPage.css";
  * Supports authentication for both players and companies
  * @param {Object} props - Component props
  * @param {function} props.onNavigate - Navigation handler function
+ * @param {function} [props.onLoginSuccess] - Login success handler function
  * @returns {JSX.Element} LoginPage component
  */
-const LoginPage = ({ onNavigate }) => {
+const LoginPage = ({ onNavigate, onLoginSuccess }) => {
   // Form state
   const [formData, setFormData] = useState({
     email: "",
@@ -82,28 +83,31 @@ const LoginPage = ({ onNavigate }) => {
 
         console.log("Login successful!", result);
 
-        // TODO: Handle successful login - store user data, navigate to dashboard
-        // For now, just show success message
-        const userType = result.user.tipoUsuario;
-        const userName =
-          userType === "jugador"
-            ? `${result.user.jugador?.nombre || "Usuario"}`
-            : result.user.empresa?.razonSocial || "Empresa";
+        // Use onLoginSuccess prop if provided, otherwise fallback to old behavior
+        if (onLoginSuccess) {
+          onLoginSuccess(result.user);
+        } else {
+          // Fallback behavior for backward compatibility
+          const userType = result.user.tipoUsuario;
+          const userName =
+            userType === "jugador"
+              ? `${result.user.jugador?.nombre || "Usuario"}`
+              : result.user.empresa?.razonSocial || "Empresa";
 
-        setErrors({
-          submit: `¡Bienvenido${
-            userType === "jugador" ? "" : "a"
-          }, ${userName}! Redirigiendo...`,
-        });
+          setErrors({
+            submit: `¡Bienvenido${
+              userType === "jugador" ? "" : "a"
+            }, ${userName}! Redirigiendo...`,
+          });
 
-        // Navigate to appropriate dashboard after brief delay
-        setTimeout(() => {
-          // TODO: Navigate to dashboard based on user type
-          console.log(`Redirecting ${userType} to dashboard`);
-          if (onNavigate) {
-            onNavigate("dashboard"); // Will need to implement dashboard
-          }
-        }, 1500);
+          // Navigate to appropriate dashboard after brief delay
+          setTimeout(() => {
+            console.log(`Redirecting ${userType} to dashboard`);
+            if (onNavigate) {
+              onNavigate("dashboard");
+            }
+          }, 1500);
+        }
       } catch (error) {
         console.error("Login failed:", error);
 

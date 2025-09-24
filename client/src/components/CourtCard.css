@@ -1,0 +1,315 @@
+/* CourtCard Component Styles */
+.court-card {
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.court-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 16px rgba(27, 156, 63, 0.15);
+  transform: translateY(-2px);
+}
+
+.court-card:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(27, 156, 63, 0.2);
+}
+
+.court-card:active {
+  transform: translateY(0);
+}
+
+/* Header */
+.court-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.court-type-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.court-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.court-details {
+  flex: 1;
+}
+
+.court-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+}
+
+.court-floor-type {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-weight: 500;
+}
+
+.court-status {
+  flex-shrink: 0;
+}
+
+.status-available {
+  background-color: #f0fdf4;
+  color: #166534;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border: 1px solid #bbf7d0;
+}
+
+.status-unavailable {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border: 1px solid #fecaca;
+}
+
+/* Venue Info */
+.court-venue-info {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.venue-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.venue-address {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  padding-left: 1.5rem; /* Align with icon */
+}
+
+/* Availability Info */
+.court-availability {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f0fdf4;
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+}
+
+.availability-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #166534;
+  margin: 0 0 0.75rem 0;
+}
+
+.availability-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.availability-date,
+.availability-time,
+.availability-price {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* Footer */
+.court-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.court-action-button {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+}
+
+.court-action-button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(27, 156, 63, 0.3);
+}
+
+.court-action-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(27, 156, 63, 0.3);
+}
+
+.court-action-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .court-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .court-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .court-status {
+    align-self: flex-start;
+  }
+
+  .court-icon {
+    font-size: 1.75rem;
+  }
+
+  .court-title {
+    font-size: 1.125rem;
+  }
+
+  .venue-name {
+    font-size: 0.9rem;
+  }
+
+  .venue-address {
+    font-size: 0.8rem;
+  }
+
+  .availability-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .court-card-footer {
+    justify-content: center;
+  }
+
+  .court-action-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .court-card {
+    padding: 0.75rem;
+  }
+
+  .court-type-info {
+    gap: 0.5rem;
+  }
+
+  .court-venue-info,
+  .court-availability {
+    padding: 0.75rem;
+  }
+
+  .venue-address {
+    padding-left: 1.25rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .court-card {
+    border-width: 3px;
+  }
+
+  .court-card:hover,
+  .court-card:focus {
+    border-color: var(--color-primary);
+    box-shadow: none;
+  }
+
+  .status-available {
+    border-color: #166534;
+    background-color: #dcfce7;
+  }
+
+  .status-unavailable {
+    border-color: #dc2626;
+    background-color: #fee2e2;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .court-card,
+  .court-action-button {
+    transition: none;
+  }
+
+  .court-card:hover {
+    transform: none;
+  }
+
+  .court-action-button:hover {
+    transform: none;
+  }
+}
+
+/* Loading state */
+.court-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.court-card.loading .court-action-button {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Selected state */
+.court-card.selected {
+  border-color: var(--color-primary);
+  background-color: rgba(27, 156, 63, 0.02);
+  box-shadow: 0 0 0 1px rgba(27, 156, 63, 0.1);
+}
