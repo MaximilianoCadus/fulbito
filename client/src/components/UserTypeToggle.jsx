@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "./Logo";
 import "./UserTypeToggle.css";
 
 /**
@@ -31,7 +32,9 @@ const UserTypeToggle = ({ selectedType, onTypeChange, disabled = false }) => {
           onClick={() => handleToggleChange("jugador")}
           disabled={disabled}
           aria-pressed={selectedType === "jugador"}>
-          <div className="user-type-toggle__icon">⚽</div>
+          <div className="user-type-toggle__icon">
+            <Logo size="24" />
+          </div>
           <div className="user-type-toggle__text">
             <div className="user-type-toggle__title">Jugador</div>
             <div className="user-type-toggle__description">

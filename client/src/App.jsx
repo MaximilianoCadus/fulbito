@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import PlayerHomePage from "./pages/PlayerHomePage";
 import PlayerReservationsPage from "./pages/PlayerReservationsPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
+import CourtDetailsPage from "./pages/CourtDetailsPage";
 import { NetworkStatus } from "./components";
 import "./App.css";
 
@@ -16,9 +17,10 @@ import "./App.css";
 function App() {
   const [currentPage, setCurrentPage] = useState("welcome");
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedCourt, setSelectedCourt] = useState(null);
 
   // Handle page navigation
-  const navigateToPage = (page, userData = null) => {
+  const navigateToPage = (page, userData = null, courtData = null) => {
     setCurrentPage(page);
 
     // If user data is provided (from successful login), store it
@@ -26,9 +28,15 @@ function App() {
       setCurrentUser(userData);
     }
 
+    // If court data is provided (for court details), store it
+    if (courtData) {
+      setSelectedCourt(courtData);
+    }
+
     // Clear user data when navigating to auth pages
     if (page === "welcome" || page === "login" || page === "register") {
       setCurrentUser(null);
+      setSelectedCourt(null);
     }
   };
 
@@ -44,6 +52,11 @@ function App() {
     } else {
       setCurrentPage("player-home"); // Default fallback
     }
+  };
+
+  // Handle user data updates (e.g., from profile edits)
+  const handleUserUpdate = (updatedUserData) => {
+    setCurrentUser(updatedUserData);
   };
 
   // Render current page
@@ -73,7 +86,19 @@ function App() {
         );
       case "profile":
         return (
-          <PlayerProfilePage onNavigate={navigateToPage} user={currentUser} />
+          <PlayerProfilePage
+            onNavigate={navigateToPage}
+            user={currentUser}
+            onUserUpdate={handleUserUpdate}
+          />
+        );
+      case "court-details":
+        return (
+          <CourtDetailsPage
+            onNavigate={navigateToPage}
+            user={currentUser}
+            court={selectedCourt}
+          />
         );
       case "company-home":
         // TODO: Implement CompanyHomePage

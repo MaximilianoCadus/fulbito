@@ -4,6 +4,7 @@ import FloorTypeSelect from "../components/FloorTypeSelect";
 import PlayerCountSelect from "../components/PlayerCountSelect";
 import CourtCard from "../components/CourtCard";
 import UserDropdown from "../components/UserDropdown";
+import { Logo } from "../components";
 import { canchaService, ApiError } from "../services";
 import "./PlayerHomePage.css";
 
@@ -83,8 +84,10 @@ const PlayerHomePage = ({ onNavigate, user }) => {
   // Handle court selection
   const handleCourtSelect = (court) => {
     console.log("Court selected:", court);
-    // TODO: Navigate to court details or booking page
-    // For now, just log the selection
+    // Navigate to court details page
+    if (onNavigate) {
+      onNavigate("court-details", null, court);
+    }
   };
 
   // Handle logout
@@ -106,7 +109,7 @@ const PlayerHomePage = ({ onNavigate, user }) => {
       <header className="player-home-header">
         <div className="header-content">
           <div className="logo-section">
-            <span className="logo-icon">⚽</span>
+            <Logo size="32" className="logo-icon" />
             <h1 className="logo-text">Fulbito!</h1>
           </div>
 

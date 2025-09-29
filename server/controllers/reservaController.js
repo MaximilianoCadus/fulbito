@@ -5,7 +5,13 @@ const getAllReservas = async (req, res) => {
   try {
     const reservas = await Reserva.find()
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
     res.status(200).json(reservas);
   } catch (error) {
     res.status(500).json({
@@ -20,7 +26,13 @@ const getReservaById = async (req, res) => {
   try {
     const reserva = await Reserva.findById(req.params.id)
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     if (!reserva) {
       return res.status(404).json({ error: "Reserva no encontrada" });
@@ -40,7 +52,13 @@ const getReservasByJugador = async (req, res) => {
   try {
     const reservas = await Reserva.find({ jugador: req.params.jugadorId })
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     res.status(200).json(reservas);
   } catch (error) {
@@ -56,7 +74,13 @@ const getReservasByCancha = async (req, res) => {
   try {
     const reservas = await Reserva.find({ cancha: req.params.canchaId })
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     res.status(200).json(reservas);
   } catch (error) {
@@ -80,7 +104,13 @@ const getReservasByEstado = async (req, res) => {
 
     const reservas = await Reserva.find({ estado })
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     res.status(200).json(reservas);
   } catch (error) {
@@ -95,9 +125,10 @@ const getReservasByEstado = async (req, res) => {
 const getReservasByFecha = async (req, res) => {
   try {
     const { fecha } = req.params;
-    const startDate = new Date(fecha);
-    const endDate = new Date(fecha);
-    endDate.setDate(endDate.getDate() + 1);
+    // Parse date string consistently without timezone issues
+    const [year, month, day] = fecha.split("-").map(Number);
+    const startDate = new Date(year, month - 1, day);
+    const endDate = new Date(year, month - 1, day + 1);
 
     const reservas = await Reserva.find({
       "fechaHora.fecha": {
@@ -106,7 +137,13 @@ const getReservasByFecha = async (req, res) => {
       },
     })
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     res.status(200).json(reservas);
   } catch (error) {
@@ -122,36 +159,96 @@ const createReserva = async (req, res) => {
   try {
     const { jugador, cancha, estado, fechaHora, precioFinal } = req.body;
 
+    console.log("Creating reservation request:", {
+      jugador,
+      cancha,
+      fechaHora,
+      precioFinal,
+      rawBody: req.body,
+    });
+
+    // Validate required fields
+    if (
+      !jugador ||
+      !cancha ||
+      !fechaHora ||
+      !fechaHora.fecha ||
+      !fechaHora.hora ||
+      !precioFinal
+    ) {
+      return res.status(400).json({
+        error:
+          "Datos incompletos. Se requieren: jugador, cancha, fechaHora (fecha y hora), y precioFinal",
+      });
+    }
+
+    // Parse date string and create consistent date without timezone issues
+    // Split the date string to avoid timezone shifts
+    const [year, month, day] = fechaHora.fecha.split("-").map(Number);
+    const normalizedDate = new Date(year, month - 1, day); // month is 0-indexed in JS
+
+    console.log("Original date string:", fechaHora.fecha);
+    console.log("Parsed components:", { year, month, day });
+    console.log("Normalized date (local):", normalizedDate.toString());
+    console.log("Normalized date (ISO):", normalizedDate.toISOString());
+    console.log("Searching for existing reservations with:", {
+      cancha,
+      fecha: normalizedDate,
+      hora: fechaHora.hora,
+    });
+
     // Verificar si ya existe una reserva para la misma cancha, fecha y hora
     const existingReserva = await Reserva.findOne({
       cancha,
-      "fechaHora.fecha": fechaHora.fecha,
+      "fechaHora.fecha": normalizedDate,
       "fechaHora.hora": fechaHora.hora,
       estado: { $in: ["pendiente", "confirmada"] },
     });
 
     if (existingReserva) {
+      console.log("Found existing reservation:", existingReserva);
       return res.status(400).json({
         error:
           "Ya existe una reserva para esta cancha en la fecha y hora especificadas",
+        existingReservation: {
+          id: existingReserva._id,
+          fecha: existingReserva.fechaHora.fecha,
+          hora: existingReserva.fechaHora.hora,
+          estado: existingReserva.estado,
+        },
       });
     }
 
+    // Create the reservation with normalized date
     const newReserva = new Reserva({
       jugador,
       cancha,
       estado: estado || "pendiente",
-      fechaHora,
+      fechaHora: {
+        fecha: normalizedDate,
+        hora: fechaHora.hora,
+      },
       precioFinal,
     });
 
+    console.log("Creating new reservation:", newReserva);
+
     const savedReserva = await newReserva.save();
+    console.log("Reservation saved successfully:", savedReserva._id);
+
     const populatedReserva = await Reserva.findById(savedReserva._id)
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     res.status(201).json(populatedReserva);
   } catch (error) {
+    console.error("Error creating reservation:", error);
     res.status(400).json({
       error: "Error al crear reserva",
       details: error.message,
@@ -168,7 +265,13 @@ const updateReserva = async (req, res) => {
       { new: true, runValidators: true }
     )
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     if (!updatedReserva) {
       return res.status(404).json({ error: "Reserva no encontrada" });
@@ -192,7 +295,13 @@ const confirmarReserva = async (req, res) => {
       { new: true, runValidators: true }
     )
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     if (!reserva) {
       return res.status(404).json({ error: "Reserva no encontrada" });
@@ -216,7 +325,13 @@ const cancelarReserva = async (req, res) => {
       { new: true, runValidators: true }
     )
       .populate("jugador")
-      .populate("cancha");
+      .populate({
+        path: "cancha",
+        populate: {
+          path: "predio",
+          model: "Predio",
+        },
+      });
 
     if (!reserva) {
       return res.status(404).json({ error: "Reserva no encontrada" });

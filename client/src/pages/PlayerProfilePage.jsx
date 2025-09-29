@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import UserDropdown from "../components/UserDropdown";
+import { Logo } from "../components";
 import { userService, ApiError } from "../services";
 import "./PlayerProfilePage.css";
 
@@ -9,9 +10,10 @@ import "./PlayerProfilePage.css";
  * @param {Object} props - Component props
  * @param {function} props.onNavigate - Navigation handler function
  * @param {Object} [props.user] - Logged-in user data
+ * @param {function} [props.onUserUpdate] - Callback when user data is updated
  * @returns {JSX.Element} PlayerProfilePage component
  */
-const PlayerProfilePage = ({ onNavigate, user }) => {
+const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
   // State for profile data and loading
   const [profileData, setProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -212,6 +214,11 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
 
       // Update local state with refreshed data
       setProfileData(refreshedUser);
+
+      // Notify parent component about user data update
+      if (onUserUpdate) {
+        onUserUpdate(refreshedUser);
+      }
 
       // Reset edit form with updated data
       setEditForm({
@@ -426,7 +433,7 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
         <header className="player-profile-header">
           <div className="header-content">
             <div className="logo-section">
-              <span className="logo-icon">⚽</span>
+              <Logo size="32" className="logo-icon" />
               <h1 className="logo-text">Fulbito!</h1>
             </div>
             <div className="user-section">
@@ -455,7 +462,7 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
         <header className="player-profile-header">
           <div className="header-content">
             <div className="logo-section">
-              <span className="logo-icon">⚽</span>
+              <Logo size="32" className="logo-icon" />
               <h1 className="logo-text">Fulbito!</h1>
             </div>
             <div className="user-section">
@@ -491,7 +498,7 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
       <header className="player-profile-header">
         <div className="header-content">
           <div className="logo-section">
-            <span className="logo-icon">⚽</span>
+            <Logo size="32" className="logo-icon" />
             <h1 className="logo-text">Fulbito!</h1>
           </div>
 
@@ -672,7 +679,7 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
 
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="danger"
                     size="medium"
                     onClick={handleCancelEdit}
                     disabled={isLoading}
@@ -830,7 +837,7 @@ const PlayerProfilePage = ({ onNavigate, user }) => {
 
                   <Button
                     type="button"
-                    variant="secondary"
+                    variant="danger"
                     size="medium"
                     onClick={handleCancelPasswordChange}
                     className="cancel-password-button">

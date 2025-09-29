@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./Button";
+import Logo from "./Logo";
 import "./ReservationCard.css";
 
 /**
@@ -8,15 +9,9 @@ import "./ReservationCard.css";
  * @param {Object} props.reservation - Reservation data object
  * @param {function} [props.onConfirm] - Handler for confirming reservation
  * @param {function} [props.onCancel] - Handler for cancelling reservation
- * @param {function} [props.onViewDetails] - Handler for viewing reservation details
  * @returns {JSX.Element} ReservationCard component
  */
-const ReservationCard = ({
-  reservation,
-  onConfirm,
-  onCancel,
-  onViewDetails,
-}) => {
+const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
   // Format date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -126,7 +121,9 @@ const ReservationCard = ({
         </div>
 
         <div className="detail-row">
-          <span className="detail-icon">⚽</span>
+          <span className="detail-icon">
+            <Logo size="16" />
+          </span>
           <div className="detail-content">
             <span className="detail-label">Tipo de piso:</span>
             <span className="detail-value court-floor">
@@ -172,37 +169,29 @@ const ReservationCard = ({
         )}
       </div>
 
-      <div className="reservation-actions">
-        {onViewDetails && (
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => onViewDetails(reservation)}
-            className="action-button view-button">
-            Ver detalles
-          </Button>
-        )}
+      {((canConfirm && onConfirm) || (canCancel && onCancel)) && (
+        <div className="reservation-actions">
+          {canConfirm && onConfirm && (
+            <Button
+              variant="primary"
+              size="small"
+              onClick={() => onConfirm(reservation)}
+              className="action-button confirm-button">
+              Confirmar
+            </Button>
+          )}
 
-        {canConfirm && onConfirm && (
-          <Button
-            variant="primary"
-            size="small"
-            onClick={() => onConfirm(reservation)}
-            className="action-button confirm-button">
-            Confirmar
-          </Button>
-        )}
-
-        {canCancel && onCancel && (
-          <Button
-            variant="danger"
-            size="small"
-            onClick={() => onCancel(reservation)}
-            className="action-button cancel-button">
-            Cancelar
-          </Button>
-        )}
-      </div>
+          {canCancel && onCancel && (
+            <Button
+              variant="danger"
+              size="small"
+              onClick={() => onCancel(reservation)}
+              className="action-button cancel-button">
+              Cancelar
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

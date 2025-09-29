@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../components/Button";
 import FormField from "../components/FormField";
+import { Logo } from "../components";
 import { userService, ApiError } from "../services";
 import "./LoginPage.css";
 
@@ -207,7 +208,7 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
           </button>
 
           <div className="login-logo">
-            <span className="login-logo-icon">⚽</span>
+            <Logo size="40" className="login-logo-icon" />
             <h1 className="login-logo-text">Fulbito!</h1>
           </div>
 

@@ -1,9 +1,16 @@
 const Cancha = require("../models/Cancha");
+const Reserva = require("../models/Reserva");
 
 // GET - Obtener todas las canchas
 const getAllCanchas = async (req, res) => {
   try {
-    const canchas = await Cancha.find().populate("predio");
+    const canchas = await Cancha.find().populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
     res.status(200).json(canchas);
   } catch (error) {
     res.status(500).json({
@@ -16,7 +23,13 @@ const getAllCanchas = async (req, res) => {
 // GET - Obtener cancha por ID
 const getCanchaById = async (req, res) => {
   try {
-    const cancha = await Cancha.findById(req.params.id).populate("predio");
+    const cancha = await Cancha.findById(req.params.id).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     if (!cancha) {
       return res.status(404).json({ error: "Cancha no encontrada" });
@@ -35,7 +48,13 @@ const getCanchaById = async (req, res) => {
 const getCanchasByPredio = async (req, res) => {
   try {
     const canchas = await Cancha.find({ predio: req.params.predioId }).populate(
-      "predio"
+      {
+        path: "predio",
+        populate: {
+          path: "direccion.localidad",
+          model: "Localidad",
+        },
+      }
     );
 
     res.status(200).json(canchas);
@@ -58,12 +77,70 @@ const getCanchasDisponibles = async (req, res) => {
       });
     }
 
-    const canchas = await Cancha.find({
-      "disponibilidad.fecha": new Date(fecha),
-      "disponibilidad.hora": hora,
-    }).populate("predio");
+    // Parse date string and create consistent date without timezone issues
+    const [year, month, day] = fecha.split("-").map(Number);
+    const normalizedDate = new Date(year, month - 1, day); // month is 0-indexed in JS
 
-    res.status(200).json(canchas);
+    console.log("Availability check - Original date string:", fecha);
+    console.log("Availability check - Parsed components:", {
+      year,
+      month,
+      day,
+    });
+    console.log(
+      "Availability check - Normalized date (local):",
+      normalizedDate.toString()
+    );
+    console.log(
+      "Availability check - Normalized date (ISO):",
+      normalizedDate.toISOString()
+    );
+    console.log("Availability check - Hour:", hora);
+
+    // First, find all courts that have availability for this date and time
+    const canchasConDisponibilidad = await Cancha.find({
+      "disponibilidad.fecha": normalizedDate,
+      "disponibilidad.hora": hora,
+    }).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
+
+    // Then, find all existing reservations for this date and time
+    // that are not cancelled (pending or confirmed reservations block availability)
+    const reservasExistentes = await Reserva.find({
+      "fechaHora.fecha": normalizedDate,
+      "fechaHora.hora": hora,
+      estado: { $in: ["pendiente", "confirmada"] },
+    }).select("cancha");
+
+    // Get IDs of courts that already have reservations
+    const canchasReservadas = reservasExistentes.map((reserva) =>
+      reserva.cancha.toString()
+    );
+
+    // Filter out courts that already have reservations
+    const canchasDisponibles = canchasConDisponibilidad.filter(
+      (cancha) => !canchasReservadas.includes(cancha._id.toString())
+    );
+
+    console.log(
+      `Found ${canchasConDisponibilidad.length} courts with availability slots for ${fecha} at ${hora}`
+    );
+    console.log(
+      `Found ${reservasExistentes.length} existing reservations for this date/time`
+    );
+    console.log(
+      `Filtered out ${canchasReservadas.length} courts with existing reservations`
+    );
+    console.log(
+      `Returning ${canchasDisponibles.length} truly available courts`
+    );
+
+    res.status(200).json(canchasDisponibles);
   } catch (error) {
     res.status(500).json({
       error: "Error al buscar canchas disponibles",
@@ -82,7 +159,13 @@ const getCanchasByFilters = async (req, res) => {
     if (tipoPiso) filters.tipoPiso = tipoPiso;
     if (predioId) filters.predio = predioId;
 
-    const canchas = await Cancha.find(filters).populate("predio");
+    const canchas = await Cancha.find(filters).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
     res.status(200).json(canchas);
   } catch (error) {
     res.status(500).json({
@@ -125,9 +208,13 @@ const createCancha = async (req, res) => {
     });
 
     const savedCancha = await newCancha.save();
-    const populatedCancha = await Cancha.findById(savedCancha._id).populate(
-      "predio"
-    );
+    const populatedCancha = await Cancha.findById(savedCancha._id).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     res.status(201).json(populatedCancha);
   } catch (error) {
@@ -145,7 +232,13 @@ const updateCancha = async (req, res) => {
       req.params.id,
       req.body,
       { new: true, runValidators: true }
-    ).populate("predio");
+    ).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     if (!updatedCancha) {
       return res.status(404).json({ error: "Cancha no encontrada" });
@@ -187,7 +280,13 @@ const addDisponibilidadToCancha = async (req, res) => {
       req.params.id,
       { $push: { disponibilidad: disponibilidad } },
       { new: true, runValidators: true }
-    ).populate("predio");
+    ).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     if (!cancha) {
       return res.status(404).json({ error: "Cancha no encontrada" });
@@ -211,7 +310,13 @@ const removeDisponibilidadFromCancha = async (req, res) => {
       req.params.id,
       { $pull: { disponibilidad: { _id: disponibilidadId } } },
       { new: true, runValidators: true }
-    ).populate("predio");
+    ).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     if (!cancha) {
       return res.status(404).json({ error: "Cancha no encontrada" });
@@ -242,7 +347,13 @@ const updateDisponibilidadCancha = async (req, res) => {
         },
       },
       { new: true, runValidators: true }
-    ).populate("predio");
+    ).populate({
+      path: "predio",
+      populate: {
+        path: "direccion.localidad",
+        model: "Localidad",
+      },
+    });
 
     if (!cancha) {
       return res

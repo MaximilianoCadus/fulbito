@@ -205,6 +205,26 @@
   animation: spin 2s linear infinite;
 }
 
+.processing-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  color: #856404;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.processing-icon {
+  font-size: 1rem;
+  animation: spin 1s linear infinite;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -452,6 +472,7 @@
 
   .empty-results,
   .loading-message,
+  .processing-message,
   .error-message {
     display: none;
   }

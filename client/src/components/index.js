@@ -8,3 +8,5 @@ export { default as MobileNumberField } from "./MobileNumberField";
 export { default as FloorTypeSelect } from "./FloorTypeSelect";
 export { default as PlayerCountSelect } from "./PlayerCountSelect";
 export { default as CourtCard } from "./CourtCard";
+export { default as Logo } from "./Logo";
+export { default as ConfirmationModal } from "./ConfirmationModal";

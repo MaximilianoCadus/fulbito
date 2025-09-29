@@ -4,6 +4,7 @@ import FormField from "../components/FormField";
 import UserTypeToggle from "../components/UserTypeToggle";
 import LocalitySelect from "../components/LocalitySelect";
 import MobileNumberField from "../components/MobileNumberField";
+import { Logo } from "../components";
 import { userService, ApiError } from "../services";
 import "./RegisterPage.css";
 
@@ -440,7 +441,7 @@ const RegisterPage = ({ onNavigate }) => {
           </button>
 
           <div className="register-logo">
-            <span className="register-logo-icon">⚽</span>
+            <Logo size="40" className="register-logo-icon" />
             <h1 className="register-logo-text">Fulbito!</h1>
           </div>
 

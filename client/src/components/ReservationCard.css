@@ -170,11 +170,13 @@
 .cancel-button {
   background: var(--color-danger, #ef4444);
   border-color: var(--color-danger, #ef4444);
+  color: white !important;
 }
 
 .cancel-button:hover {
   background: var(--color-danger-dark, #dc2626);
   border-color: var(--color-danger-dark, #dc2626);
+  color: white !important;
 }
 
 /* Responsive Design */

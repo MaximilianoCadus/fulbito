@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../components/Button";
+import { Logo } from "../components";
 import "./WelcomePage.css";
 
 /**
@@ -31,7 +32,7 @@ const WelcomePage = ({ onNavigate }) => {
           <div className="hero-content">
             <div className="logo-container">
               <div className="logo">
-                <span className="logo-icon">⚽</span>
+                <Logo size="48" className="logo-icon" />
                 <h1 className="logo-text">Fulbito!</h1>
               </div>
             </div>

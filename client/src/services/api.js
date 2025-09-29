@@ -299,6 +299,15 @@ export const reservaService = {
   },
 
   /**
+   * Get reservations for a specific court
+   * @param {string} courtId - Court ID
+   * @returns {Promise<Array>} List of court reservations
+   */
+  async getReservasByCancha(courtId) {
+    return apiClient.get(`/reservas/cancha/${courtId}`);
+  },
+
+  /**
    * Delete reservation
    * @param {string} reservaId - Reservation ID
    * @returns {Promise<null>} No content response
