@@ -1,0 +1,4 @@
+analisis y diseño:
+-cancha tiene un numero
+-la fechaHora no es de cancha, es de la reserva
+-el precio es de la cancha

@@ -5,7 +5,13 @@ import LoginPage from "./pages/LoginPage";
 import PlayerHomePage from "./pages/PlayerHomePage";
 import PlayerReservationsPage from "./pages/PlayerReservationsPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
+import CompanyProfilePage from "./pages/CompanyProfilePage";
 import CourtDetailsPage from "./pages/CourtDetailsPage";
+import CompanyHomePage from "./pages/CompanyHomePage";
+import VenueManagementPage from "./pages/VenueManagementPage";
+import VenueHomePage from "./pages/VenueHomePage";
+import VenueCourtManagementPage from "./pages/VenueCourtManagementPage";
+import VenueReservationManagementPage from "./pages/VenueReservationManagementPage";
 import { NetworkStatus } from "./components";
 import "./App.css";
 
@@ -49,6 +55,8 @@ function App() {
       setCurrentPage("player-home");
     } else if (userData.tipoUsuario === "empresa") {
       setCurrentPage("company-home"); // TODO: Implement company home page
+    } else if (userData.tipoUsuario === "predio") {
+      setCurrentPage("venue-home");
     } else {
       setCurrentPage("player-home"); // Default fallback
     }
@@ -63,6 +71,7 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case "welcome":
+      case "home":
         return <WelcomePage onNavigate={navigateToPage} />;
       case "register":
         return <RegisterPage onNavigate={navigateToPage} />;
@@ -84,14 +93,29 @@ function App() {
             user={currentUser}
           />
         );
-      case "profile":
+      case "venue-management":
         return (
-          <PlayerProfilePage
-            onNavigate={navigateToPage}
-            user={currentUser}
-            onUserUpdate={handleUserUpdate}
-          />
+          <VenueManagementPage onNavigate={navigateToPage} user={currentUser} />
         );
+      case "profile":
+        // Route to appropriate profile page based on user type
+        if (currentUser?.tipoUsuario === "empresa") {
+          return (
+            <CompanyProfilePage
+              onNavigate={navigateToPage}
+              user={currentUser}
+              onUserUpdate={handleUserUpdate}
+            />
+          );
+        } else {
+          return (
+            <PlayerProfilePage
+              onNavigate={navigateToPage}
+              user={currentUser}
+              onUserUpdate={handleUserUpdate}
+            />
+          );
+        }
       case "court-details":
         return (
           <CourtDetailsPage
@@ -101,8 +125,25 @@ function App() {
           />
         );
       case "company-home":
-        // TODO: Implement CompanyHomePage
-        return <WelcomePage onNavigate={navigateToPage} />;
+        return (
+          <CompanyHomePage onNavigate={navigateToPage} user={currentUser} />
+        );
+      case "venue-home":
+        return <VenueHomePage onNavigate={navigateToPage} user={currentUser} />;
+      case "venue-courts":
+        return (
+          <VenueCourtManagementPage
+            onNavigate={navigateToPage}
+            user={currentUser}
+          />
+        );
+      case "venue-reservations":
+        return (
+          <VenueReservationManagementPage
+            onNavigate={navigateToPage}
+            user={currentUser}
+          />
+        );
       case "dashboard":
         // Handle legacy dashboard navigation
         if (currentUser?.tipoUsuario === "jugador") {

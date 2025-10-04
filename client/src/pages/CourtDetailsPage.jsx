@@ -87,15 +87,51 @@ const CourtDetailsPage = ({ onNavigate, user, court }) => {
           weekDates.push(date);
         }
 
-        // Generate time slots
-        const timeSlots = [];
-        for (let hour = 8; hour <= 22; hour++) {
-          timeSlots.push(`${hour.toString().padStart(2, "0")}:00`);
-        }
-
         // Fetch detailed court information
         const courtData = await canchaService.getCanchaById(court._id);
         setCourtDetails(courtData);
+
+        // Generate time slots based on predio's operating hours
+        const timeSlots = [];
+
+        // Extract operating hours from predio if available
+        if (
+          courtData.predio?.horarios &&
+          courtData.predio.horarios.length > 0
+        ) {
+          console.log("Predio horarios:", courtData.predio.horarios);
+
+          // Handle multiple horario entries (split operating hours)
+          courtData.predio.horarios.forEach((horario, index) => {
+            const startHour = parseInt(horario.desde.split(":")[0]);
+            const endHour = parseInt(horario.hasta.split(":")[0]);
+
+            console.log(
+              `Horario ${index + 1}: ${startHour}:00 to ${endHour}:00`
+            );
+
+            // Generate time slots for this range
+            for (let hour = startHour; hour <= endHour; hour++) {
+              const timeSlot = `${hour.toString().padStart(2, "0")}:00`;
+              // Avoid duplicates if ranges overlap
+              if (!timeSlots.includes(timeSlot)) {
+                timeSlots.push(timeSlot);
+              }
+            }
+          });
+
+          console.log("Generated time slots (before sort):", timeSlots);
+        } else {
+          // Fallback: default business hours (8am - 10pm)
+          for (let hour = 8; hour <= 22; hour++) {
+            timeSlots.push(`${hour.toString().padStart(2, "0")}:00`);
+          }
+        }
+
+        // Sort time slots to ensure they're in chronological order
+        timeSlots.sort();
+
+        console.log("Final sorted time slots:", timeSlots);
 
         // Fetch existing reservations for this court
         let existingReservations = [];
@@ -157,16 +193,16 @@ const CourtDetailsPage = ({ onNavigate, user, court }) => {
                 return resDateStr === dateStr && resTime === time;
               });
 
-              // If we have specific availability data, use it; otherwise default to available during business hours
-              const hour = parseInt(time.split(":")[0]);
-              const isBusinessHours = hour >= 8 && hour <= 22;
+              // If we have specific availability data, use it; otherwise default to available during operating hours
+              // Since time slots are generated based on operating hours, if the time is in our list, it's within business hours
+              const isBusinessHours = true; // All generated time slots are within business hours
               const hasAvailabilitySlot = !!availableSlot;
 
               return {
                 time,
                 available:
                   !isReserved && (hasAvailabilitySlot ? true : isBusinessHours), // Available if not reserved and either specifically set or during business hours
-                price: availableSlot?.precio || 30000,
+                price: availableSlot?.precio || courtData.precio || 30000,
                 reservationId: null,
                 disponibilidadId: availableSlot?._id,
               };

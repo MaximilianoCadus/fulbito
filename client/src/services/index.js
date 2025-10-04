@@ -6,4 +6,6 @@ export {
   canchaService,
   reservaService,
   healthService,
+  empresaService,
+  predioService,
 } from "./api";

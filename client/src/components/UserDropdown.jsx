@@ -14,9 +14,13 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Get user display name
+  // Get user display name based on user type
   const userName =
-    user?.jugador?.nombre || user?.email?.split("@")[0] || "Jugador";
+    user?.jugador?.nombre ||
+    user?.empresa?.razonSocial ||
+    user?.predio?.nombrePredio ||
+    user?.email?.split("@")[0] ||
+    "Usuario";
 
   // Handle clicking outside dropdown to close
   useEffect(() => {
@@ -58,9 +62,41 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
     setIsOpen(false);
 
     switch (action) {
+      case "home":
+        console.log("Navigate to home");
+        if (onNavigate) onNavigate("home");
+        break;
       case "search":
         console.log("Navigate to court search");
         if (onNavigate) onNavigate("player-home");
+        break;
+      case "company-home":
+        console.log("Navigate to company home");
+        if (onNavigate) onNavigate("company-home");
+        break;
+      case "dashboard":
+        console.log("Navigate to company dashboard");
+        if (onNavigate) onNavigate("company-home");
+        break;
+      case "venue-management":
+        console.log("Navigate to venue management");
+        if (onNavigate) onNavigate("venue-management");
+        break;
+      case "venue-home":
+        console.log("Navigate to venue home");
+        if (onNavigate) onNavigate("venue-home");
+        break;
+      case "venue-courts":
+        console.log("Navigate to venue courts");
+        if (onNavigate) onNavigate("venue-courts");
+        break;
+      case "venue-reservations":
+        console.log("Navigate to venue reservations");
+        if (onNavigate) onNavigate("venue-reservations");
+        break;
+      case "venue-profile":
+        console.log("Navigate to venue profile");
+        if (onNavigate) onNavigate("venue-profile");
         break;
       case "reservations":
         console.log("Navigate to reservations");
@@ -92,29 +128,88 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
 
       {isOpen && (
         <div className="dropdown-menu" role="menu">
-          <button
-            className="dropdown-item"
-            onClick={() => handleMenuClick("search")}
-            role="menuitem">
-            <span className="item-icon">🔍</span>
-            <span className="item-text">Buscar canchas</span>
-          </button>
+          {user?.empresa ? (
+            // Company user menu
+            <>
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("company-home")}
+                role="menuitem">
+                <span className="item-icon">🏠</span>
+                <span className="item-text">Inicio</span>
+              </button>
 
-          <button
-            className="dropdown-item"
-            onClick={() => handleMenuClick("reservations")}
-            role="menuitem">
-            <span className="item-icon">📅</span>
-            <span className="item-text">Mis reservas</span>
-          </button>
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("venue-management")}
+                role="menuitem">
+                <span className="item-icon">🏟️</span>
+                <span className="item-text">Gestión de predios</span>
+              </button>
 
-          <button
-            className="dropdown-item"
-            onClick={() => handleMenuClick("profile")}
-            role="menuitem">
-            <span className="item-icon">👤</span>
-            <span className="item-text">Mi perfil</span>
-          </button>
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("profile")}
+                role="menuitem">
+                <span className="item-icon">👤</span>
+                <span className="item-text">Mi perfil</span>
+              </button>
+            </>
+          ) : user?.predio ? (
+            // Venue user menu
+            <>
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("venue-home")}
+                role="menuitem">
+                <span className="item-icon">🏠</span>
+                <span className="item-text">Inicio</span>
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("venue-courts")}
+                role="menuitem">
+                <span className="item-icon">⚽</span>
+                <span className="item-text">Mis Canchas</span>
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("venue-reservations")}
+                role="menuitem">
+                <span className="item-icon">📅</span>
+                <span className="item-text">Reservas</span>
+              </button>
+            </>
+          ) : (
+            // Player user menu
+            <>
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("search")}
+                role="menuitem">
+                <span className="item-icon">🔍</span>
+                <span className="item-text">Buscar canchas</span>
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("reservations")}
+                role="menuitem">
+                <span className="item-icon">📅</span>
+                <span className="item-text">Mis reservas</span>
+              </button>
+
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick("profile")}
+                role="menuitem">
+                <span className="item-icon">👤</span>
+                <span className="item-text">Mi perfil</span>
+              </button>
+            </>
+          )}
 
           <div className="dropdown-divider" />
 

@@ -110,9 +110,60 @@ const createEmpresa = async (req, res) => {
 // PUT - Actualizar empresa
 const updateEmpresa = async (req, res) => {
   try {
+    console.log("Updating empresa with ID:", req.params.id);
+    console.log("Update data received:", JSON.stringify(req.body, null, 2));
+
+    let updateData = { ...req.body };
+
+    // Si la dirección contiene una localidad, procesarla
+    if (updateData.direccion) {
+      // Si la localidad es string y no está vacía, convertirla a ObjectId
+      if (
+        typeof updateData.direccion.localidad === "string" &&
+        updateData.direccion.localidad.trim()
+      ) {
+        const Localidad = require("../models/Localidad");
+
+        // Buscar la localidad por nombre (case insensitive)
+        const localidadEncontrada = await Localidad.findOne({
+          nombre: {
+            $regex: new RegExp(updateData.direccion.localidad.trim(), "i"),
+          },
+        });
+
+        if (!localidadEncontrada) {
+          return res.status(400).json({
+            error: `No se encontró la localidad: ${updateData.direccion.localidad}`,
+          });
+        }
+
+        // Reemplazar el nombre con el ObjectId
+        updateData.direccion.localidad = localidadEncontrada._id;
+      } else if (
+        !updateData.direccion.localidad ||
+        updateData.direccion.localidad === null
+      ) {
+        // Si la localidad está vacía o es null, mantener la localidad original
+        const empresaOriginal = await Empresa.findById(req.params.id);
+        if (
+          empresaOriginal &&
+          empresaOriginal.direccion &&
+          empresaOriginal.direccion.localidad
+        ) {
+          updateData.direccion.localidad = empresaOriginal.direccion.localidad;
+        } else {
+          return res.status(400).json({
+            error: "La localidad es requerida para la dirección",
+          });
+        }
+      }
+    }
+
+    console.log("Final update data:", JSON.stringify(updateData, null, 2));
+
     const updatedEmpresa = await Empresa.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     )
       .populate("predios")
@@ -122,8 +173,10 @@ const updateEmpresa = async (req, res) => {
       return res.status(404).json({ error: "Empresa no encontrada" });
     }
 
+    console.log("Empresa updated successfully:", updatedEmpresa._id);
     res.status(200).json(updatedEmpresa);
   } catch (error) {
+    console.error("Error updating empresa:", error);
     res.status(400).json({
       error: "Error al actualizar empresa",
       details: error.message,

@@ -11,6 +11,7 @@ const {
   removeCanchaFromPredio,
   addHorarioToPredio,
   removeHorarioFromPredio,
+  updatePredioCredentials,
 } = require("../controllers/predioController");
 
 // Rutas específicas (deben ir ANTES de las rutas con parámetros)
@@ -30,5 +31,8 @@ router.put("/:id/canchas/remove", removeCanchaFromPredio);
 // Rutas para manejo de horarios
 router.put("/:id/horarios/add", addHorarioToPredio);
 router.put("/:id/horarios/remove", removeHorarioFromPredio);
+
+// Ruta para actualizar credenciales de predio
+router.put("/:id/credentials", updatePredioCredentials);
 
 module.exports = router;

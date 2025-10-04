@@ -222,6 +222,152 @@ export const canchaService = {
   async getCanchasByPredio(predioId) {
     return apiClient.get(`/canchas/predio/${predioId}`);
   },
+
+  /**
+   * Create a new court
+   * @param {Object} canchaData - Court data
+   * @param {number} canchaData.numero - Court number
+   * @param {number} canchaData.cantJugadores - Player capacity (5, 6, 7, 8, 9, 11)
+   * @param {string} canchaData.tipoPiso - Floor type (sintetico, cesped, salon)
+   * @param {string} canchaData.predio - Venue ID
+   * @returns {Promise<Object>} Created court
+   */
+  async createCancha(canchaData) {
+    return apiClient.post("/canchas", canchaData);
+  },
+
+  /**
+   * Update a court
+   * @param {string} canchaId - Court ID
+   * @param {Object} updateData - Data to update
+   * @returns {Promise<Object>} Updated court
+   */
+  async updateCancha(canchaId, updateData) {
+    return apiClient.put(`/canchas/${canchaId}`, updateData);
+  },
+
+  /**
+   * Delete a court
+   * @param {string} canchaId - Court ID
+   * @returns {Promise<Object>} Deletion confirmation
+   */
+  async deleteCancha(canchaId) {
+    return apiClient.delete(`/canchas/${canchaId}`);
+  },
+};
+
+/**
+ * Company/Empresa service for business management
+ */
+export const empresaService = {
+  /**
+   * Get company data by CUIT
+   * @param {string} cuit - Company CUIT
+   * @returns {Promise<Object>} Company data with predios
+   */
+  async getEmpresaByCuit(cuit) {
+    return apiClient.get(`/empresas/cuit/${cuit}`);
+  },
+
+  /**
+   * Get company data by ID
+   * @param {string} empresaId - Company ID
+   * @returns {Promise<Object>} Company data with predios
+   */
+  async getEmpresaById(empresaId) {
+    return apiClient.get(`/empresas/${empresaId}`);
+  },
+
+  /**
+   * Update company data
+   * @param {string} empresaId - Company ID
+   * @param {Object} updateData - Data to update
+   * @returns {Promise<Object>} Updated company data
+   */
+  async updateEmpresa(empresaId, updateData) {
+    return apiClient.put(`/empresas/${empresaId}`, updateData);
+  },
+};
+
+/**
+ * Predio service for venue management
+ */
+export const predioService = {
+  /**
+   * Get all predios for a company
+   * @param {string} empresaId - Company ID
+   * @returns {Promise<Array>} List of predios with canchas
+   */
+  async getPrediosByEmpresa(empresaId) {
+    return apiClient.get(`/predios/empresa/${empresaId}`);
+  },
+
+  /**
+   * Get predio by ID
+   * @param {string} predioId - Predio ID
+   * @returns {Promise<Object>} Predio data with canchas
+   */
+  async getPredioById(predioId) {
+    return apiClient.get(`/predios/${predioId}`);
+  },
+
+  /**
+   * Create new predio
+   * @param {Object} predioData - Predio data
+   * @returns {Promise<Object>} Created predio
+   */
+  async createPredio(predioData) {
+    return apiClient.post("/predios", predioData);
+  },
+
+  /**
+   * Update predio
+   * @param {string} predioId - Predio ID
+   * @param {Object} updateData - Data to update
+   * @returns {Promise<Object>} Updated predio
+   */
+  async updatePredio(predioId, updateData) {
+    return apiClient.put(`/predios/${predioId}`, updateData);
+  },
+
+  /**
+   * Delete predio
+   * @param {string} predioId - Predio ID
+   * @returns {Promise<Object>} Deletion confirmation
+   */
+  async deletePredio(predioId) {
+    return apiClient.delete(`/predios/${predioId}`);
+  },
+
+  /**
+   * Add cancha to predio
+   * @param {string} predioId - Predio ID
+   * @param {Object} canchaData - Cancha data
+   * @returns {Promise<Object>} Updated predio
+   */
+  async addCanchaToPredio(predioId, canchaData) {
+    return apiClient.put(`/predios/${predioId}/canchas/add`, canchaData);
+  },
+
+  /**
+   * Remove cancha from predio
+   * @param {string} predioId - Predio ID
+   * @param {string} canchaId - Cancha ID
+   * @returns {Promise<Object>} Updated predio
+   */
+  async removeCanchaFromPredio(predioId, canchaId) {
+    return apiClient.put(`/predios/${predioId}/canchas/remove`, { canchaId });
+  },
+
+  /**
+   * Update predio credentials (email and password)
+   * @param {string} predioId - Predio ID
+   * @param {Object} credentialsData - { email, password }
+   * @returns {Promise<Object>} Update confirmation
+   */
+  async updatePredioCredentials(predioId, credentialsData) {
+    return apiClient.put(`/predios/${predioId}/credentials`, credentialsData);
+  },
 };
 
 /**

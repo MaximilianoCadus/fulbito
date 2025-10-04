@@ -178,31 +178,92 @@ const getCanchasByFilters = async (req, res) => {
 // POST - Crear nueva cancha
 const createCancha = async (req, res) => {
   try {
-    const { cantJugadores, tipoPiso, disponibilidad, predio } = req.body;
+    const { numero, cantJugadores, tipoPiso, precio, disponibilidad, predio } =
+      req.body;
 
-    // Si el predio viene como string (nombre), buscar por nombre
+    // Validate required fields
+    if (!numero) {
+      return res.status(400).json({
+        error: "El número de cancha es requerido",
+      });
+    }
+
+    if (!cantJugadores) {
+      return res.status(400).json({
+        error: "La capacidad de jugadores es requerida",
+      });
+    }
+
+    if (!tipoPiso) {
+      return res.status(400).json({
+        error: "El tipo de piso es requerido",
+      });
+    }
+
+    if (precio !== undefined && (precio < 0 || isNaN(precio))) {
+      return res.status(400).json({
+        error: "El precio debe ser un número válido mayor o igual a 0",
+      });
+    }
+
+    // Validate and process predio
     let processedPredio = predio;
     if (predio && typeof predio === "string") {
       const Predio = require("../models/Predio");
+      const mongoose = require("mongoose");
 
-      // Buscar el predio por nombre (case insensitive)
-      const predioEncontrado = await Predio.findOne({
-        nombrePredio: { $regex: new RegExp(predio, "i") },
-      });
+      // Check if it's a valid ObjectId format
+      if (mongoose.Types.ObjectId.isValid(predio)) {
+        // If it's a valid ObjectId, verify it exists
+        const predioEncontrado = await Predio.findById(predio);
 
-      if (!predioEncontrado) {
-        return res.status(400).json({
-          error: `No se encontró el predio: ${predio}`,
+        if (!predioEncontrado) {
+          return res.status(400).json({
+            error: `No se encontró el predio con ID: ${predio}`,
+          });
+        }
+
+        processedPredio = predioEncontrado._id;
+      } else {
+        // If not an ObjectId, treat it as a name and search by name
+        const predioEncontrado = await Predio.findOne({
+          nombrePredio: { $regex: new RegExp(predio, "i") },
         });
-      }
 
-      // Reemplazar el nombre con el ObjectId
-      processedPredio = predioEncontrado._id;
+        if (!predioEncontrado) {
+          return res.status(400).json({
+            error: `No se encontró el predio: ${predio}`,
+          });
+        }
+
+        processedPredio = predioEncontrado._id;
+      }
+    }
+
+    // Ensure predio is provided
+    if (!processedPredio) {
+      return res.status(400).json({
+        error: "El predio es requerido",
+      });
+    }
+
+    // Check if court number already exists for this predio
+    const existingCancha = await Cancha.findOne({
+      numero: numero,
+      predio: processedPredio,
+    });
+
+    if (existingCancha) {
+      return res.status(400).json({
+        error: `Ya existe una cancha con el número ${numero} en este predio`,
+      });
     }
 
     const newCancha = new Cancha({
+      numero,
       cantJugadores,
       tipoPiso,
+      precio: precio || 30000, // Default to 30000 if not provided
       disponibilidad: disponibilidad || [],
       predio: processedPredio,
     });
