@@ -10,7 +10,7 @@ const {
   deleteLocalidad,
 } = require("../controllers/localidadController");
 
-// Rutas de búsqueda (deben ir ANTES de las rutas con parámetros)
+// Rutas de búsqueda
 router.get("/cp/:cp", getLocalidadByCP);
 router.get("/search/nombre", searchLocalidadesByNombre);
 

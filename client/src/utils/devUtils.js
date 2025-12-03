@@ -1,12 +1,7 @@
 import { userService, locationService, ApiError } from "../services";
 
-/**
- * Development utilities for testing API integration
- */
+// Utilidades de desarrollo para testing
 export const devUtils = {
-  /**
-   * Test player registration with sample data
-   */
   async testPlayerRegistration() {
     const testPlayerData = {
       email: `test.player.${Date.now()}@fulbito.com`,
@@ -35,14 +30,11 @@ export const devUtils = {
     }
   },
 
-  /**
-   * Test company registration with sample data
-   */
   async testCompanyRegistration() {
     const testCompanyData = {
       email: `test.company.${Date.now()}@fulbito.com`,
       contraseña: "testPassword123",
-      cuit: "20" + Math.floor(Math.random() * 100000000) + "1", // Generate random valid CUIT
+      cuit: "20" + Math.floor(Math.random() * 100000000) + "1",
       razonSocial: "Fulbito Test SA",
       direccion: {
         calle: "Av. Corrientes",
@@ -72,9 +64,6 @@ export const devUtils = {
     }
   },
 
-  /**
-   * Test API connectivity
-   */
   async testConnection() {
     try {
       console.log("Testing API connection...");
@@ -119,7 +108,7 @@ export const devUtils = {
   },
 };
 
-// Make devUtils available globally in development
+// Hacer devUtils disponible globalmente en desarrollo
 if (import.meta.env.DEV) {
   window.devUtils = devUtils;
 }

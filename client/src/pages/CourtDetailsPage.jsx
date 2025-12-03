@@ -43,7 +43,6 @@ const CourtDetailsPage = ({ onNavigate, user, court }) => {
     return `${count} jugadores`;
   };
 
-  // Get day name in Spanish
   const getDayName = (date) => {
     const dayNames = [
       "Domingo",
@@ -57,7 +56,6 @@ const CourtDetailsPage = ({ onNavigate, user, court }) => {
     return dayNames[date.getDay()];
   };
 
-  // Format date for display
   const formatDate = (date) => {
     return date.toLocaleDateString("es-AR", {
       day: "2-digit",
@@ -65,7 +63,7 @@ const CourtDetailsPage = ({ onNavigate, user, court }) => {
     });
   };
 
-  // Fetch court details and availability
+  // Cargar detalles y disponibilidad de la cancha
   useEffect(() => {
     const fetchCourtDetails = async () => {
       if (!court?._id) {

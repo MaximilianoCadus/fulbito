@@ -1,18 +1,6 @@
 import React from "react";
 import "./FloorTypeSelect.css";
 
-/**
- * Floor type selection component for courts search
- * Supports the three floor types from the Cancha model: sintetico, cesped, salon
- * @param {Object} props - Component props
- * @param {string} props.value - Selected floor type value
- * @param {function} props.onChange - Change handler function
- * @param {string} [props.error] - Error message to display
- * @param {boolean} [props.required] - Whether the field is required
- * @param {boolean} [props.disabled] - Whether the field is disabled
- * @param {string} [props.className] - Additional CSS classes
- * @returns {JSX.Element} FloorTypeSelect component
- */
 const FloorTypeSelect = ({
   value,
   onChange,

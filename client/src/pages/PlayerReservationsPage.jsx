@@ -7,45 +7,30 @@ import { Logo } from "../components";
 import { reservaService, ApiError } from "../services";
 import "./PlayerReservationsPage.css";
 
-/**
- * PlayerReservationsPage component to display all player's reservations
- * @param {Object} props - Component props
- * @param {function} props.onNavigate - Navigation handler function
- * @param {Object} [props.user] - Logged-in user data
- * @returns {JSX.Element} PlayerReservationsPage component
- */
 const PlayerReservationsPage = ({ onNavigate, user }) => {
   console.log("PlayerReservationsPage component rendering with props:", {
     onNavigate,
     user,
   });
 
-  // State for reservations and loading
   const [reservations, setReservations] = useState([]);
   const [filteredReservations, setFilteredReservations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isProcessingExpired, setIsProcessingExpired] = useState(false);
 
-  // Filter state
   const [activeFilter, setActiveFilter] = useState("all");
 
-  // Modal state for cancellation confirmation
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [reservationToCancel, setReservationToCancel] = useState(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
-  /**
-   * Process reservations to automatically cancel expired pending ones
-   * @param {Array} reservations - Array of reservations
-   * @returns {Promise<Array>} - Processed reservations with expired ones cancelled
-   */
+  // Procesa las reservas vencidas y las cancela automáticamente
   const processExpiredReservations = useCallback(async (reservations) => {
     const now = new Date();
     const updatedReservations = [];
     let expiredCount = 0;
 
-    // Check how many reservations need to be cancelled
     const expiredReservations = reservations.filter((reservation) => {
       if (reservation.estado === "pendiente") {
         const reservationDateTime = new Date(reservation.fechaHora.fecha);
@@ -64,13 +49,11 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
     }
 
     for (const reservation of reservations) {
-      // Check if reservation is past due and still pending
       if (reservation.estado === "pendiente") {
         const reservationDateTime = new Date(reservation.fechaHora.fecha);
         const [hours, minutes] = reservation.fechaHora.hora.split(":");
         reservationDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
-        // If the reservation time has passed, automatically cancel it
         if (reservationDateTime < now) {
           try {
             console.log(
@@ -86,15 +69,12 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
               `Failed to auto-cancel reservation ${reservation._id}:`,
               error
             );
-            // If cancellation fails, keep the original reservation
             updatedReservations.push(reservation);
           }
         } else {
-          // Reservation is still valid, keep as is
           updatedReservations.push(reservation);
         }
       } else {
-        // Reservation is not pending, keep as is
         updatedReservations.push(reservation);
       }
     }
@@ -109,7 +89,6 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
     return updatedReservations;
   }, []);
 
-  // Load reservations on component mount
   useEffect(() => {
     const loadPlayerReservations = async () => {
       console.log("PlayerReservationsPage - User object:", user);
@@ -168,10 +147,9 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
     loadPlayerReservations();
   }, [user]);
 
-  // Set up periodic check for expired reservations - TEMPORARILY DISABLED FOR DEBUGGING
+  // Chequeo periódico de reservas vencidas - TEMPORALMENTE DESHABILITADO PARA DEBUG
   /*
   useEffect(() => {
-    // Check every 60 seconds for expired reservations
     const intervalId = setInterval(async () => {
       if (reservations.length > 0) {
         const hasExpiredPending = reservations.some((reservation) => {
@@ -194,13 +172,12 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
           await loadReservations();
         }
       }
-    }, 60000); // Check every minute
+    }, 60000); // Chequear cada minuto
 
     return () => clearInterval(intervalId);
   }, [reservations, loadReservations]);
   */
 
-  // Apply filter when reservations or filter changes
   useEffect(() => {
     const filterReservations = () => {
       let filtered = [...reservations];
@@ -235,7 +212,6 @@ const PlayerReservationsPage = ({ onNavigate, user }) => {
         }
         case "all":
         default:
-          // No filtering
           break;
       }
 

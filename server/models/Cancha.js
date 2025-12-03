@@ -35,7 +35,6 @@ const CanchaSchema = new mongoose.Schema({
   },
 });
 
-// Compound index to ensure unique court numbers within a predio
 CanchaSchema.index({ numero: 1, predio: 1 }, { unique: true });
 
 module.exports = mongoose.model("Cancha", CanchaSchema);

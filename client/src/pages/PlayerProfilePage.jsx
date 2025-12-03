@@ -5,16 +5,7 @@ import { Logo } from "../components";
 import { userService, ApiError } from "../services";
 import "./PlayerProfilePage.css";
 
-/**
- * PlayerProfilePage component to display and edit player's profile information
- * @param {Object} props - Component props
- * @param {function} props.onNavigate - Navigation handler function
- * @param {Object} [props.user] - Logged-in user data
- * @param {function} [props.onUserUpdate] - Callback when user data is updated
- * @returns {JSX.Element} PlayerProfilePage component
- */
 const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
-  // State for profile data and loading
   const [profileData, setProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -23,7 +14,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  // Form state for editing
   const [editForm, setEditForm] = useState({
     nombre: "",
     apellido: "",
@@ -31,20 +21,17 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     email: "",
   });
 
-  // Password change form state
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
-  // Password validation state
   const [passwordValidation, setPasswordValidation] = useState({
     isValid: false,
     errors: [],
   });
 
-  // Load profile data on component mount
   useEffect(() => {
     const loadUserProfile = async () => {
       if (!user?._id) {
@@ -63,7 +50,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
 
         setProfileData(result);
 
-        // Initialize edit form with current data
         setEditForm({
           nombre: result.jugador?.nombre || "",
           apellido: result.jugador?.apellido || "",
@@ -88,9 +74,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     loadUserProfile();
   }, [user]);
 
-  /**
-   * Load user's profile data from the API (for retry functionality)
-   */
   const loadProfileData = async () => {
     if (!user?._id) {
       setError("No se pudo identificar el usuario");
@@ -108,7 +91,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
 
       setProfileData(result);
 
-      // Initialize edit form with current data
       setEditForm({
         nombre: result.jugador?.nombre || "",
         apellido: result.jugador?.apellido || "",
@@ -130,10 +112,7 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     }
   };
 
-  /**
-   * Handle input changes in edit form
-   */
-  const handleInputChange = (e) => {
+  const handleEditFormChange = (e) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({
       ...prev,
@@ -149,9 +128,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     }
   };
 
-  /**
-   * Handle form submission for profile update
-   */
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
@@ -171,7 +147,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
       return;
     }
 
-    // Validate phone number format
     const phoneRegex = /^\+549\d{10}$/;
     if (!phoneRegex.test(editForm.nroCelular)) {
       setError("El formato del número de celular debe ser +549XXXXXXXXXX");
@@ -249,9 +224,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     }
   };
 
-  /**
-   * Handle password form input changes
-   */
   const handlePasswordInputChange = (e) => {
     const { name, value } = e.target;
     const newPasswordForm = {
@@ -367,9 +339,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     }
   };
 
-  /**
-   * Handle cancel password change
-   */
   const handleCancelPasswordChange = () => {
     setPasswordForm({
       currentPassword: "",
@@ -398,9 +367,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     setIsEditing(false);
   };
 
-  /**
-   * Handle logout
-   */
   const handleLogout = () => {
     console.log("Logging out...");
     if (onNavigate) onNavigate("welcome");
@@ -414,9 +380,6 @@ const PlayerProfilePage = ({ onNavigate, user, onUserUpdate }) => {
     if (onNavigate) onNavigate(page);
   };
 
-  /**
-   * Format phone number for display
-   */
   const formatPhoneNumber = (phone) => {
     if (!phone) return "No especificado";
     // Format +549XXXXXXXXXX to +54 9 XXX XXX XXXX

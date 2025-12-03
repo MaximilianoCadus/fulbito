@@ -3,16 +3,7 @@ import Button from "./Button";
 import Logo from "./Logo";
 import "./ReservationCard.css";
 
-/**
- * ReservationCard component to display individual reservation details
- * @param {Object} props - Component props
- * @param {Object} props.reservation - Reservation data object
- * @param {function} [props.onConfirm] - Handler for confirming reservation
- * @param {function} [props.onCancel] - Handler for cancelling reservation
- * @returns {JSX.Element} ReservationCard component
- */
 const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
-  // Format date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-AR", {
@@ -23,12 +14,10 @@ const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
     });
   };
 
-  // Format time for display
   const formatTime = (timeString) => {
     return timeString;
   };
 
-  // Get status badge styling
   const getStatusBadgeClass = (estado) => {
     switch (estado) {
       case "confirmada":
@@ -41,7 +30,6 @@ const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
     }
   };
 
-  // Get status text in Spanish
   const getStatusText = (estado) => {
     switch (estado) {
       case "confirmada":
@@ -54,7 +42,6 @@ const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
     }
   };
 
-  // Format price
   const formatPrice = (price) => {
     return new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -62,7 +49,6 @@ const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
     }).format(price);
   };
 
-  // Generate court name based on available data
   const getCourtName = (cancha) => {
     if (!cancha) return "Cancha no disponible";
 
@@ -78,7 +64,6 @@ const ReservationCard = ({ reservation, onConfirm, onCancel }) => {
     return `${floorType} ${cancha.cantJugadores || ""}`;
   };
 
-  // Get venue name
   const getVenueName = (cancha) => {
     return cancha?.predio?.nombrePredio || "Predio sin nombre";
   };

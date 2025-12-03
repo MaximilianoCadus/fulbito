@@ -60,18 +60,15 @@ const createEmpresa = async (req, res) => {
   try {
     const { cuit, razonSocial, direccion, predios } = req.body;
 
-    // Verificar si el CUIT ya existe
     const existingEmpresa = await Empresa.findOne({ cuit });
     if (existingEmpresa) {
       return res.status(400).json({ error: "El CUIT ya está registrado" });
     }
 
-    // Si la localidad viene como string (nombre), buscarla en la BD
     let processedDireccion = { ...direccion };
     if (direccion && typeof direccion.localidad === "string") {
       const Localidad = require("../models/Localidad");
 
-      // Buscar la localidad por nombre (case insensitive)
       const localidadEncontrada = await Localidad.findOne({
         nombre: { $regex: new RegExp(direccion.localidad, "i") },
       });
@@ -82,7 +79,6 @@ const createEmpresa = async (req, res) => {
         });
       }
 
-      // Reemplazar el nombre con el ObjectId
       processedDireccion.localidad = localidadEncontrada._id;
     }
 
@@ -115,16 +111,13 @@ const updateEmpresa = async (req, res) => {
 
     let updateData = { ...req.body };
 
-    // Si la dirección contiene una localidad, procesarla
     if (updateData.direccion) {
-      // Si la localidad es string y no está vacía, convertirla a ObjectId
       if (
         typeof updateData.direccion.localidad === "string" &&
         updateData.direccion.localidad.trim()
       ) {
         const Localidad = require("../models/Localidad");
 
-        // Buscar la localidad por nombre (case insensitive)
         const localidadEncontrada = await Localidad.findOne({
           nombre: {
             $regex: new RegExp(updateData.direccion.localidad.trim(), "i"),
@@ -137,13 +130,11 @@ const updateEmpresa = async (req, res) => {
           });
         }
 
-        // Reemplazar el nombre con el ObjectId
         updateData.direccion.localidad = localidadEncontrada._id;
       } else if (
         !updateData.direccion.localidad ||
         updateData.direccion.localidad === null
       ) {
-        // Si la localidad está vacía o es null, mantener la localidad original
         const empresaOriginal = await Empresa.findById(req.params.id);
         if (
           empresaOriginal &&

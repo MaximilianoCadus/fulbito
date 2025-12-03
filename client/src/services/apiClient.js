@@ -1,22 +1,12 @@
-/**
- * API configuration and base URL
- */
+// Configuración de la API
 const API_BASE_URL = "http://localhost:5000/api";
 
-/**
- * HTTP client wrapper with error handling
- */
+// Cliente HTTP con manejo de errores
 class ApiClient {
   constructor() {
     this.baseURL = API_BASE_URL;
   }
 
-  /**
-   * Makes an HTTP request with proper error handling
-   * @param {string} endpoint - API endpoint
-   * @param {Object} options - Fetch options
-   * @returns {Promise<Object>} Response data
-   */
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
 
@@ -31,9 +21,8 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
 
-      // Handle different response statuses
       if (response.status === 204) {
-        return null; // No content
+        return null;
       }
 
       const data = await response.json();
@@ -42,7 +31,7 @@ class ApiClient {
         throw new ApiError(
           data.error || `HTTP ${response.status}`,
           response.status,
-          data // Store the full error response data
+          data
         );
       }
 
@@ -52,7 +41,7 @@ class ApiClient {
         throw error;
       }
 
-      // Network or other errors
+      // Errores de red
       if (error.name === "TypeError" && error.message.includes("fetch")) {
         throw new ApiError(
           "Error de conexión. Verifica que el servidor esté funcionando.",
@@ -69,16 +58,10 @@ class ApiClient {
     }
   }
 
-  /**
-   * GET request
-   */
   async get(endpoint) {
     return this.request(endpoint, { method: "GET" });
   }
 
-  /**
-   * POST request
-   */
   async post(endpoint, data) {
     return this.request(endpoint, {
       method: "POST",
@@ -86,9 +69,6 @@ class ApiClient {
     });
   }
 
-  /**
-   * PUT request
-   */
   async put(endpoint, data) {
     return this.request(endpoint, {
       method: "PUT",
@@ -96,17 +76,11 @@ class ApiClient {
     });
   }
 
-  /**
-   * DELETE request
-   */
   async delete(endpoint) {
     return this.request(endpoint, { method: "DELETE" });
   }
 }
 
-/**
- * Custom API Error class
- */
 class ApiError extends Error {
   constructor(message, status, details) {
     super(message);
@@ -115,37 +89,22 @@ class ApiError extends Error {
     this.details = details;
   }
 
-  /**
-   * Get the full error data from the API response
-   */
   get data() {
     return this.details;
   }
 
-  /**
-   * Check if error is due to validation issues
-   */
   isValidationError() {
     return this.status === 400;
   }
 
-  /**
-   * Check if error is due to conflict (e.g., email already exists)
-   */
   isConflictError() {
     return this.status === 409 || this.message.includes("ya está registrado");
   }
 
-  /**
-   * Check if error is due to network issues
-   */
   isNetworkError() {
     return this.status === 0;
   }
 
-  /**
-   * Get user-friendly error message
-   */
   getUserMessage() {
     if (this.isNetworkError()) {
       return "Error de conexión. Verifica tu conexión a internet.";
@@ -163,7 +122,6 @@ class ApiError extends Error {
   }
 }
 
-// Create singleton instance
 const apiClient = new ApiClient();
 
 export { apiClient, ApiError };

@@ -8,7 +8,6 @@ const loginUser = async (req, res) => {
 
     console.log(`[USER-LOGIN] Login attempt for email: ${email}`);
 
-    // Validate required fields
     if (!email || !contraseña) {
       console.log(`[USER-LOGIN] Missing required fields:`, {
         email: !!email,
@@ -20,7 +19,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() })
       .populate("jugador")
       .populate("empresa")
@@ -34,7 +32,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Check password
     const isPasswordValid = await bcrypt.compare(contraseña, user.contraseña);
     if (!isPasswordValid) {
       console.log(`[USER-LOGIN] Invalid password for email: ${email}`);
@@ -50,7 +47,6 @@ const loginUser = async (req, res) => {
       tipoUsuario: user.tipoUsuario,
     });
 
-    // Return user data without password
     const userResponse = {
       _id: user._id,
       email: user.email,
@@ -119,13 +115,11 @@ const createUser = async (req, res) => {
     const { email, contraseña, tipoUsuario, jugador, empresa, predio } =
       req.body;
 
-    // Verificar si el email ya existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    // Encriptar contraseña
     const hashedPassword = await bcrypt.hash(contraseña, 10);
 
     const newUser = new User({
@@ -139,7 +133,6 @@ const createUser = async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    // Retornar usuario sin contraseña
     const userResponse = await User.findById(savedUser._id)
       .populate("jugador")
       .populate("empresa")
@@ -160,7 +153,6 @@ const updateUser = async (req, res) => {
   try {
     const { contraseña, ...updateData } = req.body;
 
-    // Si se proporciona nueva contraseña, encriptarla
     if (contraseña) {
       updateData.contraseña = await bcrypt.hash(contraseña, 10);
     }
@@ -211,13 +203,11 @@ const createUserWithJugador = async (req, res) => {
   try {
     const { email, contraseña, nombre, apellido, nroCelular } = req.body;
 
-    // Verificar si el email ya existe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    // Crear jugador primero
     const Jugador = require("../models/Jugador");
     const newJugador = new Jugador({
       nombre,
@@ -226,7 +216,6 @@ const createUserWithJugador = async (req, res) => {
     });
     const savedJugador = await newJugador.save();
 
-    // Crear usuario con referencia al jugador
     const hashedPassword = await bcrypt.hash(contraseña, 10);
     const newUser = new User({
       email,
@@ -279,7 +268,6 @@ const createUserWithEmpresa = async (req, res) => {
         : null,
     });
 
-    // Validación de datos requeridos
     if (!email || !contraseña || !cuit || !razonSocial || !direccion) {
       const missingFields = [];
       if (!email) missingFields.push("email");
@@ -298,7 +286,6 @@ const createUserWithEmpresa = async (req, res) => {
       });
     }
 
-    // Validación de dirección completa
     if (!direccion.calle || !direccion.altura || !direccion.localidad) {
       const missingAddressFields = [];
       if (!direccion.calle) missingAddressFields.push("calle");
@@ -317,19 +304,16 @@ const createUserWithEmpresa = async (req, res) => {
       });
     }
 
-    // Verificar si el email ya existe
     console.log(`[USER-EMPRESA] Checking if email exists: ${email}`);
     console.log(`[USER-EMPRESA] Email query: { email: "${email}" }`);
 
     try {
-      // First, let's see what emails exist in the database
       const allUsers = await User.find({}, { email: 1, _id: 1 }).limit(20);
       console.log(
         `[USER-EMPRESA] Existing emails in database:`,
         allUsers.map((u) => u.email)
       );
 
-      // Check for exact email match (case-sensitive)
       const existingUser = await User.findOne({ email: email });
       console.log(
         `[USER-EMPRESA] Exact match query result:`,
@@ -342,7 +326,6 @@ const createUserWithEmpresa = async (req, res) => {
           : null
       );
 
-      // Also check for case-insensitive match to be thorough
       const existingUserCaseInsensitive = await User.findOne({
         email: {
           $regex: new RegExp(
@@ -387,7 +370,6 @@ const createUserWithEmpresa = async (req, res) => {
       });
     }
 
-    // Verificar si el CUIT ya existe
     console.log(`[USER-EMPRESA] Checking if CUIT exists: ${cuit}`);
     const Empresa = require("../models/Empresa");
     const existingEmpresa = await Empresa.findOne({ cuit });
@@ -400,13 +382,11 @@ const createUserWithEmpresa = async (req, res) => {
       });
     }
 
-    // Si la localidad viene como string (nombre), buscarla en la BD
     let processedDireccion = { ...direccion };
     if (direccion && typeof direccion.localidad === "string") {
       console.log(`[USER-EMPRESA] Looking up locality: ${direccion.localidad}`);
       const Localidad = require("../models/Localidad");
 
-      // Buscar la localidad por nombre (case insensitive)
       const localidadEncontrada = await Localidad.findOne({
         nombre: { $regex: new RegExp(direccion.localidad, "i") },
       });
@@ -415,7 +395,6 @@ const createUserWithEmpresa = async (req, res) => {
         console.log(
           `[USER-EMPRESA] Locality not found: ${direccion.localidad}`
         );
-        // Buscar localidades similares para sugerir
         const similarLocalidades = await Localidad.find({
           nombre: { $regex: new RegExp(direccion.localidad, "i") },
         }).limit(3);
@@ -431,11 +410,9 @@ const createUserWithEmpresa = async (req, res) => {
       console.log(
         `[USER-EMPRESA] Locality found: ${localidadEncontrada.nombre} (ID: ${localidadEncontrada._id})`
       );
-      // Reemplazar el nombre con el ObjectId
       processedDireccion.localidad = localidadEncontrada._id;
     }
 
-    // Crear empresa primero
     console.log(`[USER-EMPRESA] Creating empresa with processed data`);
     const newEmpresa = new Empresa({
       cuit,
@@ -452,7 +429,6 @@ const createUserWithEmpresa = async (req, res) => {
     } catch (empresaError) {
       console.error(`[USER-EMPRESA] Error creating empresa:`, empresaError);
 
-      // Manejar errores específicos de validación de empresa
       if (empresaError.name === "ValidationError") {
         const validationErrors = Object.keys(empresaError.errors).map(
           (field) => {
@@ -478,10 +454,9 @@ const createUserWithEmpresa = async (req, res) => {
         });
       }
 
-      throw empresaError; // Re-throw if not handled specifically
+      throw empresaError;
     }
 
-    // Crear usuario con referencia a la empresa
     console.log(`[USER-EMPRESA] Creating user account for empresa`);
     let hashedPassword;
     try {
@@ -510,7 +485,6 @@ const createUserWithEmpresa = async (req, res) => {
     } catch (userError) {
       console.error(`[USER-EMPRESA] Error creating user:`, userError);
 
-      // Si falló la creación del usuario, eliminar la empresa creada
       try {
         await Empresa.findByIdAndDelete(savedEmpresa._id);
         console.log(
@@ -523,7 +497,6 @@ const createUserWithEmpresa = async (req, res) => {
         );
       }
 
-      // Manejar errores específicos de validación de usuario
       if (userError.name === "ValidationError") {
         const validationErrors = Object.keys(userError.errors).map((field) => {
           const error = userError.errors[field];
@@ -545,10 +518,9 @@ const createUserWithEmpresa = async (req, res) => {
         });
       }
 
-      throw userError; // Re-throw if not handled specifically
+      throw userError;
     }
 
-    // Obtener respuesta completa con población
     console.log(`[USER-EMPRESA] Fetching complete user data`);
     const userResponse = await User.findById(savedUser._id)
       .populate("empresa")
@@ -568,7 +540,6 @@ const createUserWithEmpresa = async (req, res) => {
       }
     );
 
-    // Error genérico para casos no manejados específicamente
     res.status(500).json({
       error: "Error interno del servidor al crear usuario empresa",
       code: "INTERNAL_SERVER_ERROR",

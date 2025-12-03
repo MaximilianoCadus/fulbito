@@ -78,7 +78,6 @@ const createLocalidad = async (req, res) => {
   try {
     const { cp, nombre } = req.body;
 
-    // Verificar si el código postal ya existe
     const existingLocalidad = await Localidad.findOne({ cp });
     if (existingLocalidad) {
       return res.status(400).json({

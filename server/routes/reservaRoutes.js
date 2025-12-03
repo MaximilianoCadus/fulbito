@@ -14,7 +14,7 @@ const {
   deleteReserva,
 } = require("../controllers/reservaController");
 
-// Rutas específicas (deben ir ANTES de las rutas con parámetros)
+// Rutas específicas
 router.get("/jugador/:jugadorId", getReservasByJugador);
 router.get("/cancha/:canchaId", getReservasByCancha);
 router.get("/estado/:estado", getReservasByEstado);

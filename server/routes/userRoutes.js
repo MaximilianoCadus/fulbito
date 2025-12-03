@@ -14,7 +14,7 @@ const {
   associateUserWithPredio,
 } = require("../controllers/userController");
 
-// Rutas especiales (deben ir ANTES de las rutas con parámetros)
+// Rutas especiales
 router.post("/login", loginUser);
 router.post("/complete/jugador", createUserWithJugador);
 router.post("/complete/empresa", createUserWithEmpresa);

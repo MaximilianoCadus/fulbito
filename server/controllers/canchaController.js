@@ -77,9 +77,8 @@ const getCanchasDisponibles = async (req, res) => {
       });
     }
 
-    // Parse date string and create consistent date without timezone issues
     const [year, month, day] = fecha.split("-").map(Number);
-    const normalizedDate = new Date(year, month - 1, day); // month is 0-indexed in JS
+    const normalizedDate = new Date(year, month - 1, day);
 
     console.log("Availability check - Original date string:", fecha);
     console.log("Availability check - Parsed components:", {
@@ -97,7 +96,6 @@ const getCanchasDisponibles = async (req, res) => {
     );
     console.log("Availability check - Hour:", hora);
 
-    // First, find all courts that have availability for this date and time
     const canchasConDisponibilidad = await Cancha.find({
       "disponibilidad.fecha": normalizedDate,
       "disponibilidad.hora": hora,
@@ -109,20 +107,16 @@ const getCanchasDisponibles = async (req, res) => {
       },
     });
 
-    // Then, find all existing reservations for this date and time
-    // that are not cancelled (pending or confirmed reservations block availability)
     const reservasExistentes = await Reserva.find({
       "fechaHora.fecha": normalizedDate,
       "fechaHora.hora": hora,
       estado: { $in: ["pendiente", "confirmada"] },
     }).select("cancha");
 
-    // Get IDs of courts that already have reservations
     const canchasReservadas = reservasExistentes.map((reserva) =>
       reserva.cancha.toString()
     );
 
-    // Filter out courts that already have reservations
     const canchasDisponibles = canchasConDisponibilidad.filter(
       (cancha) => !canchasReservadas.includes(cancha._id.toString())
     );
@@ -181,7 +175,6 @@ const createCancha = async (req, res) => {
     const { numero, cantJugadores, tipoPiso, precio, disponibilidad, predio } =
       req.body;
 
-    // Validate required fields
     if (!numero) {
       return res.status(400).json({
         error: "El número de cancha es requerido",
@@ -206,15 +199,12 @@ const createCancha = async (req, res) => {
       });
     }
 
-    // Validate and process predio
     let processedPredio = predio;
     if (predio && typeof predio === "string") {
       const Predio = require("../models/Predio");
       const mongoose = require("mongoose");
 
-      // Check if it's a valid ObjectId format
       if (mongoose.Types.ObjectId.isValid(predio)) {
-        // If it's a valid ObjectId, verify it exists
         const predioEncontrado = await Predio.findById(predio);
 
         if (!predioEncontrado) {
@@ -225,7 +215,6 @@ const createCancha = async (req, res) => {
 
         processedPredio = predioEncontrado._id;
       } else {
-        // If not an ObjectId, treat it as a name and search by name
         const predioEncontrado = await Predio.findOne({
           nombrePredio: { $regex: new RegExp(predio, "i") },
         });
@@ -240,14 +229,12 @@ const createCancha = async (req, res) => {
       }
     }
 
-    // Ensure predio is provided
     if (!processedPredio) {
       return res.status(400).json({
         error: "El predio es requerido",
       });
     }
 
-    // Check if court number already exists for this predio
     const existingCancha = await Cancha.findOne({
       numero: numero,
       predio: processedPredio,
@@ -263,7 +250,7 @@ const createCancha = async (req, res) => {
       numero,
       cantJugadores,
       tipoPiso,
-      precio: precio || 30000, // Default to 30000 if not provided
+      precio: precio || 30000,
       disponibilidad: disponibilidad || [],
       predio: processedPredio,
     });

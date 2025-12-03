@@ -5,26 +5,15 @@ import { Logo } from "../components";
 import { userService, ApiError } from "../services";
 import "./LoginPage.css";
 
-/**
- * Login page component for the Fulbito app
- * Supports authentication for both players and companies
- * @param {Object} props - Component props
- * @param {function} props.onNavigate - Navigation handler function
- * @param {function} [props.onLoginSuccess] - Login success handler function
- * @returns {JSX.Element} LoginPage component
- */
 const LoginPage = ({ onNavigate, onLoginSuccess }) => {
-  // Form state
   const [formData, setFormData] = useState({
     email: "",
     contraseña: "",
   });
 
-  // Form errors and loading state
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -32,7 +21,6 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -41,7 +29,6 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
     }
   };
 
-  // Validation functions
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) return "El email es requerido";
@@ -55,24 +42,20 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
     return "";
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validate all fields
     const newErrors = {};
     newErrors.email = validateEmail(formData.email);
     newErrors.contraseña = validatePassword(formData.contraseña);
 
-    // Remove empty errors
     Object.keys(newErrors).forEach((key) => {
       if (!newErrors[key]) delete newErrors[key];
     });
 
     setErrors(newErrors);
 
-    // If no errors, submit form
     if (Object.keys(newErrors).length === 0) {
       try {
         console.log("Attempting login:", { email: formData.email });
@@ -84,11 +67,9 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
 
         console.log("Login successful!", result);
 
-        // Use onLoginSuccess prop if provided, otherwise fallback to old behavior
         if (onLoginSuccess) {
           onLoginSuccess(result.user);
         } else {
-          // Fallback behavior for backward compatibility
           const userType = result.user.tipoUsuario;
           const userName =
             userType === "jugador"
@@ -101,7 +82,6 @@ const LoginPage = ({ onNavigate, onLoginSuccess }) => {
             }, ${userName}! Redirigiendo...`,
           });
 
-          // Navigate to appropriate dashboard after brief delay
           setTimeout(() => {
             console.log(`Redirecting ${userType} to dashboard`);
             if (onNavigate) {

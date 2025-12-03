@@ -1,25 +1,6 @@
 import React from "react";
 import "./CourtCard.css";
 
-/**
- * Court card component for displaying court information in search results
- * @param {Object} props - Component       {hasAvailability && (
-        <div className="court-availability">
-          {nextAvailable ? (
-            <h5 className="availability-title">🕐 Próximo horario disponible:</h5>
-          ) : (
-            <h5 className="availability-title">📅 Horarios disponibles:</h5>
-          )}    {hasAvailability && (
-        <div className="court-availability">
-          {nextAvailable ? (
-            <h5 className="availability-title">🕐 Próximo horario disponible:</h5>
-          ) : (
-            <h5 className="availability-title">📅 Horarios disponibles:</h5>
-          )}s
- * @param {Object} props.court - Court data object
- * @param {function} [props.onSelect] - Handler for court selection
- * @returns {JSX.Element} CourtCard component
- */
 const CourtCard = ({ court, onSelect }) => {
   // Format floor type for display
   const formatFloorType = (tipoPiso) => {

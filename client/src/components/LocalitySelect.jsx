@@ -2,17 +2,6 @@ import React, { useState, useEffect } from "react";
 import { locationService } from "../services";
 import "./LocalitySelect.css";
 
-/**
- * Locality selector component with async loading and automatic postal code population
- * @param {Object} props - Component props
- * @param {string} props.value - Selected locality ID
- * @param {function} props.onChange - Change handler for locality
- * @param {function} props.onPostalCodeChange - Change handler for postal code
- * @param {string} props.error - Error message
- * @param {boolean} props.required - Required field indicator
- * @param {boolean} props.disabled - Disabled state
- * @returns {JSX.Element} LocalitySelect component
- */
 const LocalitySelect = ({
   value,
   onChange,

@@ -1,23 +1,6 @@
 import React from "react";
 import "./FormField.css";
 
-/**
- * Reusable form field component with validation support
- * @param {Object} props - FormField props
- * @param {string} props.label - Field label text
- * @param {string} props.name - Field name attribute
- * @param {string} props.type - Input type (text, email, password, tel, etc.)
- * @param {string} props.value - Current field value
- * @param {function} props.onChange - Change handler function
- * @param {function} props.onBlur - Blur handler function
- * @param {string} props.error - Error message to display
- * @param {boolean} props.required - Whether field is required
- * @param {string} props.placeholder - Placeholder text
- * @param {number} props.maxLength - Maximum character length
- * @param {string} props.pattern - Regex pattern for validation
- * @param {boolean} props.disabled - Whether field is disabled
- * @returns {JSX.Element} FormField component
- */
 const FormField = ({
   label,
   name,

@@ -2,14 +2,6 @@ import React from "react";
 import Logo from "./Logo";
 import "./UserTypeToggle.css";
 
-/**
- * User type toggle component for switching between player and company registration
- * @param {Object} props - UserTypeToggle props
- * @param {string} props.selectedType - Currently selected user type ('jugador' or 'empresa')
- * @param {function} props.onTypeChange - Handler for type change
- * @param {boolean} props.disabled - Whether toggle is disabled
- * @returns {JSX.Element} UserTypeToggle component
- */
 const UserTypeToggle = ({ selectedType, onTypeChange, disabled = false }) => {
   const handleToggleChange = (type) => {
     if (!disabled && type !== selectedType) {

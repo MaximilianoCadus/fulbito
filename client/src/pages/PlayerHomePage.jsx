@@ -8,28 +8,17 @@ import { Logo } from "../components";
 import { canchaService, ApiError } from "../services";
 import "./PlayerHomePage.css";
 
-/**
- * Home page component for logged-in player users
- * Features court search functionality with floor type and player count filters
- * @param {Object} props - Component props
- * @param {function} props.onNavigate - Navigation handler function
- * @param {Object} [props.user] - Logged-in user data
- * @returns {JSX.Element} PlayerHomePage component
- */
 const PlayerHomePage = ({ onNavigate, user }) => {
-  // Search form state
   const [searchFilters, setSearchFilters] = useState({
     tipoPiso: "",
     cantJugadores: "",
   });
 
-  // Search results and loading states
   const [courts, setCourts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState("");
 
-  // Handle input changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setSearchFilters((prev) => ({
@@ -38,7 +27,6 @@ const PlayerHomePage = ({ onNavigate, user }) => {
     }));
   };
 
-  // Handle search form submission
   const handleSearch = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -48,7 +36,6 @@ const PlayerHomePage = ({ onNavigate, user }) => {
     try {
       console.log("Searching courts with filters:", searchFilters);
 
-      // Create filters object, excluding empty values
       const filters = {};
       if (searchFilters.tipoPiso) filters.tipoPiso = searchFilters.tipoPiso;
       if (searchFilters.cantJugadores)
@@ -70,7 +57,6 @@ const PlayerHomePage = ({ onNavigate, user }) => {
     }
   };
 
-  // Handle clear search
   const handleClearSearch = () => {
     setSearchFilters({
       tipoPiso: "",
@@ -81,23 +67,19 @@ const PlayerHomePage = ({ onNavigate, user }) => {
     setError("");
   };
 
-  // Handle court selection
   const handleCourtSelect = (court) => {
     console.log("Court selected:", court);
-    // Navigate to court details page
     if (onNavigate) {
       onNavigate("court-details", null, court);
     }
   };
 
-  // Handle logout
   const handleLogout = () => {
     console.log("Logging out...");
-    // TODO: Implement actual logout logic (clear session/tokens)
+    // TODO: Implementar lógica de logout (limpiar sesión/tokens)
     if (onNavigate) onNavigate("welcome");
   };
 
-  // Handle navigation from dropdown
   const handleNavigation = (page) => {
     console.log(`Navigating to: ${page}`);
     if (onNavigate) onNavigate(page);

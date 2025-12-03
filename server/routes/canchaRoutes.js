@@ -14,7 +14,7 @@ const {
   updateDisponibilidadCancha,
 } = require("../controllers/canchaController");
 
-// Rutas de búsqueda y filtros (deben ir ANTES de las rutas con parámetros)
+// Rutas de búsqueda y filtros
 router.get("/search/disponibles", getCanchasDisponibles);
 router.get("/search/filters", getCanchasByFilters);
 router.get("/predio/:predioId", getCanchasByPredio);

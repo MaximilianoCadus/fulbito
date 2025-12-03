@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./MobileNumberField.css";
 
-/**
- * Argentina mobile number field with automatic +54 prefix and formatting
- * Displays Argentine flag and +54 prefix, user only enters area code and number
- * @param {Object} props - Component props
- * @param {string} props.value - Current phone number value
- * @param {function} props.onChange - Change handler
- * @param {string} props.error - Error message
- * @param {boolean} props.required - Required field indicator
- * @param {boolean} props.disabled - Disabled state
- * @returns {JSX.Element} MobileNumberField component
- */
 const MobileNumberField = ({
   value,
   onChange,

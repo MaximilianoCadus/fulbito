@@ -14,7 +14,7 @@ const {
   updatePredioCredentials,
 } = require("../controllers/predioController");
 
-// Rutas específicas (deben ir ANTES de las rutas con parámetros)
+// Rutas específicas
 router.get("/empresa/:empresaId", getPrediosByEmpresa);
 
 // Rutas básicas CRUD

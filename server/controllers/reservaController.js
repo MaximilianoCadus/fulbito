@@ -125,7 +125,6 @@ const getReservasByEstado = async (req, res) => {
 const getReservasByFecha = async (req, res) => {
   try {
     const { fecha } = req.params;
-    // Parse date string consistently without timezone issues
     const [year, month, day] = fecha.split("-").map(Number);
     const startDate = new Date(year, month - 1, day);
     const endDate = new Date(year, month - 1, day + 1);
@@ -167,7 +166,6 @@ const createReserva = async (req, res) => {
       rawBody: req.body,
     });
 
-    // Validate required fields
     if (
       !jugador ||
       !cancha ||
@@ -182,10 +180,8 @@ const createReserva = async (req, res) => {
       });
     }
 
-    // Parse date string and create consistent date without timezone issues
-    // Split the date string to avoid timezone shifts
     const [year, month, day] = fechaHora.fecha.split("-").map(Number);
-    const normalizedDate = new Date(year, month - 1, day); // month is 0-indexed in JS
+    const normalizedDate = new Date(year, month - 1, day); // Los meses en JS son 0-indexed
 
     console.log("Original date string:", fechaHora.fecha);
     console.log("Parsed components:", { year, month, day });
@@ -197,7 +193,6 @@ const createReserva = async (req, res) => {
       hora: fechaHora.hora,
     });
 
-    // Verificar si ya existe una reserva para la misma cancha, fecha y hora
     const existingReserva = await Reserva.findOne({
       cancha,
       "fechaHora.fecha": normalizedDate,
@@ -219,7 +214,6 @@ const createReserva = async (req, res) => {
       });
     }
 
-    // Create the reservation with normalized date
     const newReserva = new Reserva({
       jugador,
       cancha,

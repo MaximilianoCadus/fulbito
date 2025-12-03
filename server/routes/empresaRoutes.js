@@ -11,7 +11,7 @@ const {
   removePredioFromEmpresa,
 } = require("../controllers/empresaController");
 
-// Rutas específicas (deben ir ANTES de las rutas con parámetros)
+// Rutas específicas
 router.get("/cuit/:cuit", getEmpresaByCuit);
 
 // Rutas básicas CRUD

@@ -45,13 +45,11 @@ const getPrediosByEmpresa = async (req, res) => {
       .populate("empresa")
       .populate("direccion.localidad");
 
-    // Get user information for each predio
     const User = require("../models/User");
     const prediosWithUserInfo = await Promise.all(
       predios.map(async (predio) => {
         const predioObj = predio.toObject();
 
-        // Find associated user
         const user = await User.findOne({
           predio: predio._id,
           tipoUsuario: "predio",
@@ -87,12 +85,10 @@ const createPredio = async (req, res) => {
       password,
     } = req.body;
 
-    // Si la localidad viene como string (nombre), buscarla en la BD
     let processedDireccion = { ...direccion };
     if (direccion && typeof direccion.localidad === "string") {
       const Localidad = require("../models/Localidad");
 
-      // Buscar la localidad por nombre (case insensitive)
       const localidadEncontrada = await Localidad.findOne({
         nombre: { $regex: new RegExp(direccion.localidad, "i") },
       });
@@ -103,16 +99,13 @@ const createPredio = async (req, res) => {
         });
       }
 
-      // Reemplazar el nombre con el ObjectId
       processedDireccion.localidad = localidadEncontrada._id;
     }
 
-    // Si la empresa viene como string (CUIT), buscarla en la BD
     let processedEmpresa = empresa;
     if (empresa && typeof empresa === "string") {
       const Empresa = require("../models/Empresa");
 
-      // Buscar la empresa por CUIT
       const empresaEncontrada = await Empresa.findOne({
         cuit: empresa,
       });
@@ -123,7 +116,6 @@ const createPredio = async (req, res) => {
         });
       }
 
-      // Reemplazar el CUIT con el ObjectId
       processedEmpresa = empresaEncontrada._id;
     }
 
@@ -137,26 +129,21 @@ const createPredio = async (req, res) => {
 
     const savedPredio = await newPredio.save();
 
-    // Create user account for the venue if email and password are provided
     if (email && password) {
       const User = require("../models/User");
       const bcrypt = require("bcrypt");
 
-      // Check if user with this email already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        // If user already exists, delete the created predio and return error
         await Predio.findByIdAndDelete(savedPredio._id);
         return res.status(409).json({
           error: "Ya existe un usuario con este email",
         });
       }
 
-      // Hash the password
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      // Create the user account
       const newUser = new User({
         email,
         contraseña: hashedPassword,
@@ -193,7 +180,6 @@ const updatePredio = async (req, res) => {
 
     const { nombrePredio, direccion, horarios, canchas, empresa } = req.body;
 
-    // Preparar datos para actualización
     let updateData = {};
 
     if (nombrePredio !== undefined) {
@@ -208,17 +194,14 @@ const updatePredio = async (req, res) => {
       updateData.canchas = canchas;
     }
 
-    // Si hay direccion, procesarla
     if (direccion) {
       let processedDireccion = { ...direccion };
 
-      // Si la localidad viene como string (nombre), buscarla en la BD
       if (direccion.localidad && typeof direccion.localidad === "string") {
         const Localidad = require("../models/Localidad");
 
         console.log("UPDATE PREDIO - Buscando localidad:", direccion.localidad);
 
-        // Buscar la localidad por nombre (case insensitive)
         const localidadEncontrada = await Localidad.findOne({
           nombre: { $regex: new RegExp(direccion.localidad, "i") },
         });
@@ -237,20 +220,17 @@ const updatePredio = async (req, res) => {
           "UPDATE PREDIO - Localidad encontrada:",
           localidadEncontrada
         );
-        // Reemplazar el nombre con el ObjectId
         processedDireccion.localidad = localidadEncontrada._id;
       }
 
       updateData.direccion = processedDireccion;
     }
 
-    // Si la empresa viene como string (CUIT), buscarla en la BD
     if (empresa && typeof empresa === "string") {
       const Empresa = require("../models/Empresa");
 
       console.log("UPDATE PREDIO - Buscando empresa por CUIT:", empresa);
 
-      // Buscar la empresa por CUIT
       const empresaEncontrada = await Empresa.findOne({
         cuit: empresa,
       });
@@ -430,7 +410,7 @@ const removeHorarioFromPredio = async (req, res) => {
   }
 };
 
-// PUT - Update predio user credentials
+// Actualizar credenciales del predio
 const updatePredioCredentials = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -439,7 +419,6 @@ const updatePredioCredentials = async (req, res) => {
     console.log("UPDATE CREDENTIALS - Predio ID:", predioId);
     console.log("UPDATE CREDENTIALS - New email:", email);
 
-    // Validate inputs
     if (!email || !email.trim()) {
       return res.status(400).json({
         error: "El email es obligatorio",
@@ -453,7 +432,6 @@ const updatePredioCredentials = async (req, res) => {
       });
     }
 
-    // Find the venue
     const predio = await Predio.findById(predioId);
     if (!predio) {
       return res.status(404).json({ error: "Predio no encontrado" });
@@ -462,7 +440,6 @@ const updatePredioCredentials = async (req, res) => {
     const User = require("../models/User");
     const bcrypt = require("bcrypt");
 
-    // Find the associated user
     const user = await User.findOne({
       predio: predioId,
       tipoUsuario: "predio",
@@ -474,7 +451,6 @@ const updatePredioCredentials = async (req, res) => {
       });
     }
 
-    // Check if the new email is already taken by another user
     if (email !== user.email) {
       const existingUser = await User.findOne({
         email,
@@ -488,10 +464,8 @@ const updatePredioCredentials = async (req, res) => {
       }
     }
 
-    // Prepare update data
     const updateData = { email };
 
-    // Only update password if it's provided
     if (password && password.trim()) {
       if (password.length < 8) {
         return res.status(400).json({
@@ -504,7 +478,6 @@ const updatePredioCredentials = async (req, res) => {
       updateData.contraseña = hashedPassword;
     }
 
-    // Update the user
     await User.findByIdAndUpdate(user._id, updateData, {
       new: true,
       runValidators: true,

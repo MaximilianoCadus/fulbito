@@ -1,20 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./UserDropdown.css";
 
-/**
- * User dropdown menu component
- * Provides navigation options for logged-in users including profile, reservations, and logout
- * @param {Object} props - Component props
- * @param {Object} [props.user] - User data object
- * @param {function} props.onNavigate - Navigation handler function
- * @param {function} props.onLogout - Logout handler function
- * @returns {JSX.Element} UserDropdown component
- */
 const UserDropdown = ({ user, onNavigate, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Get user display name based on user type
   const userName =
     user?.jugador?.nombre ||
     user?.empresa?.razonSocial ||
@@ -22,7 +12,7 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
     user?.email?.split("@")[0] ||
     "Usuario";
 
-  // Handle clicking outside dropdown to close
+  // Cerrar al hacer click fuera del dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -36,7 +26,7 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
     };
   }, []);
 
-  // Handle escape key to close dropdown
+  // Cerrar con tecla Escape
   useEffect(() => {
     const handleEscapeKey = (event) => {
       if (event.key === "Escape") {
@@ -52,12 +42,10 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
     }
   }, [isOpen]);
 
-  // Toggle dropdown
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  // Handle menu item clicks
   const handleMenuClick = (action) => {
     setIsOpen(false);
 
@@ -129,7 +117,6 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
       {isOpen && (
         <div className="dropdown-menu" role="menu">
           {user?.empresa ? (
-            // Company user menu
             <>
               <button
                 className="dropdown-item"
@@ -156,7 +143,6 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
               </button>
             </>
           ) : user?.predio ? (
-            // Venue user menu
             <>
               <button
                 className="dropdown-item"
@@ -183,7 +169,6 @@ const UserDropdown = ({ user, onNavigate, onLogout }) => {
               </button>
             </>
           ) : (
-            // Player user menu
             <>
               <button
                 className="dropdown-item"
