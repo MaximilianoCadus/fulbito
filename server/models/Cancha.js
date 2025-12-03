@@ -21,13 +21,6 @@ const CanchaSchema = new mongoose.Schema({
     min: 0,
     default: 30000,
   },
-  disponibilidad: [
-    {
-      fecha: { type: Date, required: true },
-      hora: { type: String, required: true },
-      precio: { type: Number, required: true, min: 0 },
-    },
-  ],
   predio: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Predio",
