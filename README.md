@@ -58,7 +58,7 @@ Sistema web completo para gestionar reservas de canchas de fútbol que conecta j
 
 ### Características Técnicas
 
-- 🎨 Interfaz moderna y responsiva (mobile-first)
+- 🎨 Interfaz moderna
 - ⚡ Rendimiento optimizado con Vite
 - 🔒 Autenticación segura con bcrypt
 - 🌐 API RESTful bien documentada
@@ -102,7 +102,6 @@ Sistema web completo para gestionar reservas de canchas de fútbol que conecta j
 
 - ⚛️ Componentes funcionales con Hooks
 - 🎨 Sistema de diseño modular con colores de marca (#1b9c3f)
-- 📱 Diseño totalmente responsive (mobile-first)
 - ♿ Accesibilidad con HTML semántico
 - 🔄 Estado local y custom hooks para validación
 
@@ -347,15 +346,14 @@ fulbito/
 │   │   ├── logger.js
 │   │   └── validation.js
 │   ├── server.js                # Punto de entrada del servidor
-│   ├── package.json
-│   └── API_ENDPOINTS_GUIDE.md   # Documentación completa de la API
+│   └── package.json
+│
 │
 ├── docs/                        # Documentación adicional
-│   ├── mobile-number-implementation.md
-│   ├── mobile-field-styling-fixes.md
+│   ├── documentacion/
+│   ├── diagramas/
 │   └── anexos/
 │
-├── PRESENTACION.md              # Presentación del proyecto
 └── README.md                    # Este archivo
 ```
 
@@ -457,23 +455,6 @@ DELETE /api/reserva/:id                # Cancelar reserva
 GET    /api/reserva/jugador/:jugadorId # Reservas de un jugador
 GET    /api/reserva/cancha/:canchaId   # Reservas de una cancha
 ```
-
-### Documentación Completa de la API
-
-Para una documentación detallada de todos los endpoints con ejemplos de uso, consulta:
-
-📖 **[Guía Completa de API](./server/API_ENDPOINTS_GUIDE.md)**
-
-Esta guía incluye:
-
-- Ejemplos completos de peticiones y respuestas
-- Datos requeridos para cada operación
-- Códigos de error y su significado
-- Flujos recomendados de operaciones
-- Ejemplos de implementación en React
-- Casos de uso comunes
-
----
 
 ## 🚀 Quick Start
 
